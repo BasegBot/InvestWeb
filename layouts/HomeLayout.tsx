@@ -1,7 +1,8 @@
 // Layout/container used for the main mostly empty landing page, can be used for related pages (credits, about, etc.)
 
-import { AnimatePresence, domAnimation, LazyMotion } from "framer-motion";
+import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
 import Head from "next/head";
+import router from "next/router";
 import NavBar from "../components/common/NavBar";
 import { NavTemplate } from "./NavTemplates";
 
@@ -27,7 +28,15 @@ function HomeLayout(props: HomeLayoutProps) {
       </LazyMotion>
       <LazyMotion features={domAnimation}>
         <AnimatePresence exitBeforeEnter>
-          <div className="h-screen w-screen">{props.children}</div>
+          <m.div
+            key={router.route.concat("layout-fade")}
+            className="h-screen w-screen"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {props.children}
+          </m.div>
         </AnimatePresence>
       </LazyMotion>
     </>

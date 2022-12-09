@@ -4,6 +4,7 @@ import HomeLayout from "../layouts/HomeLayout";
 import { homeMain } from "../layouts/NavTemplates";
 import type { NextPageWithLayout } from "./_app";
 import Image from "next/image";
+import Slider from "@mui/material/Slider";
 
 const Home: NextPageWithLayout = () => {
   let api7tvEmotes = `/api/7tv/emotes?c=61ad997effa9aba101bcfddf`;
@@ -33,7 +34,7 @@ const Home: NextPageWithLayout = () => {
         emoteUrls = emoteUrls.filter((emote: any) => emote !== null);
 
         setEmotes(emoteUrls);
-        console.log(emoteUrls);
+        setCurrentEmote(Math.floor(Math.random() * emoteUrls.length));
       });
     console.log(currentEmote);
 
@@ -72,14 +73,53 @@ const Home: NextPageWithLayout = () => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-zinc-900">
-      <div className="flex text-white">
-        <div className="flex flex-col">
-          <m.h1 className="font-Manrope m-2 text-7xl">Buy high</m.h1>
-          <m.h1 className="font-Manrope m-2 text-7xl">Sell low</m.h1>
-          <m.h2 className="pt-2">...or something like that</m.h2>
-        </div>
-        <div className="flex items-center">{slideShow}</div>
+    <div className="flex h-full w-full flex-col items-center justify-center">
+      <div className="inline-grid grid-cols-1 gap-10 text-white md:grid-cols-3">
+        <m.div
+          className="flex flex-col font-plusJakarta font-semibold md:col-span-2"
+          initial={{ opacity: 0, y: -100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.5,
+            duration: 2.5,
+            type: "spring",
+            bounce: 0.5,
+            stiffness: 150,
+          }}
+        >
+          <m.div
+            className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, staggerChildren: 0.2, duration: 1.0 }}
+          >
+            <m.h1 className="text-8xl">Buy high</m.h1>
+            <m.h1 className="text-8xl">Sell low</m.h1>
+          </m.div>
+          <m.h2
+            className="pt-2 font-medium italic text-gray-200"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.5, duration: 1.0 }}
+          >
+            ...or something like that
+          </m.h2>
+        </m.div>
+        <m.div
+          className="flex items-center justify-center"
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          transition={{
+            delay: 1.5,
+            staggerChildren: 0.2,
+          }}
+        >
+          {slideShow}
+        </m.div>
       </div>
     </div>
   );

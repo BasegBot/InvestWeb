@@ -39,12 +39,12 @@ function NavBar({ options }: NavProps) {
   const [navList, setNavList] = useState(options);
   return (
     <m.div
-      className="font-Manrope pointer-events-none fixed hidden w-screen justify-between p-7 text-2xl sm:flex"
+      className="pointer-events-none fixed inline-grid w-screen grid-cols-2 p-2 pt-7 font-plusJakarta text-2xl sm:p-7 lg:grid-cols-3"
       initial="initial"
       animate="animate"
       variants={containerAnimation}
     >
-      <m.div variants={itemAnimation}>
+      <m.div className="mr-auto" variants={itemAnimation}>
         <Link
           key="InvestBot"
           href="/"
@@ -70,16 +70,19 @@ function NavBar({ options }: NavProps) {
               alt="InvestBot Logo"
               width={64}
               height={64}
-              className="ml-4 mr-6 rounded-b-full"
+              className="mr-8 rounded-b-full"
             />
           </m.div>
-          <p className="pointer-events-auto select-none pr-5 text-white">
-            InvestBot
-          </p>
+          <div className="pointer-events-auto flex select-none flex-col items-start justify-center pr-5 font-plusJakarta text-white">
+            <p>InvestBot</p>
+            <p className="text-xs text-gray-400">
+              Serving anny&apos;s community est. 2022
+            </p>
+          </div>
         </Link>
       </m.div>
       <m.div
-        className="flex flex-row items-center justify-center"
+        className="mr-auto ml-auto hidden flex-row items-center justify-center lg:flex"
         variants={itemAnimation}
       >
         {navList.map((nav, index) => (
@@ -87,11 +90,11 @@ function NavBar({ options }: NavProps) {
         ))}
       </m.div>
       <m.div
-        className="flex flex-row items-center justify-center"
+        className="ml-auto flex flex-row items-center justify-center"
         variants={itemAnimation}
       >
         <p className="pointer-events-auto select-none pr-5 text-white">
-          Login blah blah
+          Login blah
         </p>
         <div className="h-10 w-10 rounded-full bg-white"></div>
       </m.div>
