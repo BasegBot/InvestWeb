@@ -3,9 +3,15 @@ module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./layouts/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        plusJakarta: ["Plus Jakarta Sans", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };
