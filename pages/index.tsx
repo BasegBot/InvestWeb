@@ -4,7 +4,6 @@ import HomeLayout from "../layouts/HomeLayout";
 import { homeMain } from "../layouts/NavTemplates";
 import type { NextPageWithLayout } from "./_app";
 import Image from "next/image";
-import Slider from "@mui/material/Slider";
 
 const Home: NextPageWithLayout = () => {
   let api7tvEmotes = `/api/7tv/emotes?c=61ad997effa9aba101bcfddf`;
