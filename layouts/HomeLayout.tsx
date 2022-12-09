@@ -2,7 +2,7 @@
 
 import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
 import Head from "next/head";
-import router from "next/router";
+import { useRouter } from "next/router";
 import NavBar from "../components/common/NavBar";
 import { NavTemplate } from "./NavTemplates";
 
@@ -14,6 +14,8 @@ interface HomeLayoutProps {
 function HomeLayout(props: HomeLayoutProps) {
   // get the nav options
   const navOptions = props.navOptions;
+  // get the current route for animation purposes
+  const router = useRouter();
   return (
     <>
       <Head>
