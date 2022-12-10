@@ -27,7 +27,7 @@ const DefaultNavOption = ({
       }}
     >
       <Link href={href} key={label}>
-        <p className="pointer-events-auto relative select-none pl-3 pr-3 text-white md:pl-5 md:pr-5">
+        <p className="pointer-events-auto relative select-none pl-3 pr-3 font-plusJakarta text-white md:pl-5 md:pr-5">
           {label}
         </p>
       </Link>
@@ -42,6 +42,7 @@ interface NavTemplate {
 const homeMain: NavTemplate[] = [
   { content: <DefaultNavOption label="Home" href="/" /> },
   { content: <DefaultNavOption label="About" href="/about" /> },
+  { content: <DefaultNavOption label="Team" href="/team" /> },
   { content: <DefaultNavOption label="Contact" href="/contact" /> },
 ];
 

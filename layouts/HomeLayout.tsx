@@ -20,16 +20,27 @@ function HomeLayout(props: HomeLayoutProps) {
     <>
       <Head>
         <title>InvestBot</title>
-        <meta name="description" content="Temporary home :)" />
+        <meta name="description" content="Serving anny's community est. 2022" />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="theme-color" content="#c084fc" />
+        <meta property="og:title" content="InvestBot" />
+        <meta
+          property="og:description"
+          content="Serving anny's community est. 2022"
+        />
+        <meta property="og:image" content="/img/logo.webp" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="InvestBot" />
       </Head>
+
       <LazyMotion features={domAnimation}>
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence mode="wait">
           <NavBar options={navOptions} />
         </AnimatePresence>
       </LazyMotion>
+
       <LazyMotion features={domAnimation}>
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence mode="wait">
           <m.div
             key={router.route.concat("layout-fade")}
             className="h-screen w-screen"

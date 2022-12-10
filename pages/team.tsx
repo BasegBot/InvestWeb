@@ -3,21 +3,21 @@ import { ReactElement } from "react";
 import HomeLayout from "../layouts/HomeLayout";
 import { homeMain } from "../layouts/NavTemplates";
 
-function About() {
+function Team() {
   return (
     <>
       <Head>
-        <title>Contact - InvestBot</title>
+        <title>Team - InvestBot</title>
       </Head>
       <div className="flex min-h-screen flex-col items-center justify-center py-2">
-        <p>contact</p>
+        <p>Team</p>
       </div>
     </>
   );
 }
 
-About.getLayout = function getLayout(page: ReactElement) {
+Team.getLayout = function getLayout(page: ReactElement) {
   return <HomeLayout navOptions={homeMain}>{page}</HomeLayout>;
 };
 
-export default About;
+export default Team;
