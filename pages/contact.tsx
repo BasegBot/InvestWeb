@@ -5,9 +5,14 @@ import { homeMain } from "../layouts/NavTemplates";
 
 function About() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <p>contact</p>
-    </div>
+    <>
+      <Head>
+        <title>Contact - InvestBot</title>
+      </Head>
+      <div className="flex min-h-screen flex-col items-center justify-center py-2">
+        <p>contact</p>
+      </div>
+    </>
   );
 }
 
