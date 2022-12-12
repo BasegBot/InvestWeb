@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState, Fragment } from "react";
 import { NavTemplate } from "../../layouts/NavTemplates";
 import Image from "next/image";
-import { m, Variants } from "framer-motion";
+import { AnimatePresence, m, Variants } from "framer-motion";
 
 interface NavProps {
   options: NavTemplate[];
@@ -37,16 +37,16 @@ const itemAnimation: Variants = {
 
 function NavBar({ options }: NavProps) {
   const [navList, setNavList] = useState(options);
-  const [active, setActive] = useState(false);
+  const [isActive, setActive] = useState(false);
   return (
     <m.div
-      className="pointer-events-none fixed inline-grid w-screen grid-cols-2 p-2 pt-7 font-plusJakarta text-2xl sm:p-7 lg:grid-cols-3"
+      className="pointer-events-none fixed inline-grid w-screen grid-cols-2 font-plusJakarta text-2xl lg:grid-cols-3"
       initial="initial"
       animate="animate"
       variants={containerAnimation}
     >
       <m.div
-        className="mr-auto flex flex-row items-center justify-center"
+        className="mr-auto flex flex-row items-center justify-center p-2 sm:p-7"
         variants={itemAnimation}
       >
         <m.div
@@ -102,10 +102,9 @@ function NavBar({ options }: NavProps) {
           viewBox="0 0 330 330"
           x={0}
           y={0}
-          animate={{ rotate: active ? 180 : 0 }}
+          animate={{ rotate: isActive ? 180 : 0 }}
           onClick={() => {
-            setActive(!active);
-            console.log(active);
+            setActive(!isActive);
           }}
         >
           <m.path
@@ -126,26 +125,45 @@ function NavBar({ options }: NavProps) {
         ))}
       </m.div>
       <m.div
-        className="ml-auto flex flex-row items-center justify-center"
+        className="ml-auto flex flex-row items-center justify-center p-2 sm:p-7"
         variants={itemAnimation}
       >
         <p className="pointer-events-auto select-none pr-5 text-white">
-          Login blah
+          Login WIP
         </p>
         <div className="h-10 w-10 rounded-full bg-white"></div>
       </m.div>
-      <m.div
-        // hiddden by default, when active is true, animate in
-        className="pointer-events-auto z-10 mt-5 bg-zinc-800 md:max-w-[75%] lg:hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: active ? 1 : 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {navList.map((nav, index) => (
-          // TODO: stylize -- I have a flight in 4 hours and its 3:04 am
-          <Fragment key={index}>{nav.content}</Fragment>
-        ))}
-      </m.div>
+      <AnimatePresence mode="wait">
+        {isActive && (
+          <m.div
+            // hiddden by default, when active is true, animate in
+            className="pointer-events-auto z-10 flex w-screen flex-col items-center overflow-hidden bg-zinc-800 bg-opacity-70 pt-5 backdrop-blur lg:hidden"
+            // have it take up the entire screen, animate in by expanding from the bottom of the nav bar to the bottom of the screen
+            // TODO: struggled with getting children staggers/delays to work
+            initial={{ height: 0 }}
+            animate={{ height: "100vh" }}
+            exit={{ height: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {navList.map((nav, index) => (
+              <m.div
+                key={index}
+                custom={index}
+                className="pointer-events-auto flex w-[90%] flex-row items-center justify-center border-t-[1px] border-b-[1px] border-zinc-700 p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
+                transition={{ duration: 0.3 }}
+                onClick={() => {
+                  setActive(false);
+                }}
+              >
+                {nav.content}
+              </m.div>
+            ))}
+          </m.div>
+        )}
+      </AnimatePresence>
     </m.div>
   );
 }

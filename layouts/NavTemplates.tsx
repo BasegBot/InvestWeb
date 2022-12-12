@@ -10,28 +10,29 @@ const DefaultNavOption = ({
   href: string;
 }): ReactElement => {
   return (
-    <m.div
-      initial={{
-        scale: 1,
-      }}
-      whileHover={{
-        transition: {
-          duration: 0.2,
-        },
-      }}
-      whileTap={{
-        scale: 0.95,
-        transition: {
-          duration: 0.2,
-        },
-      }}
-    >
-      <Link href={href} key={label}>
+    <Link href={href} key={label} className="w-full text-center">
+      <m.div
+        initial={{
+          scale: 1,
+        }}
+        whileHover={{
+          scale: 1.05,
+          transition: {
+            duration: 0.2,
+          },
+        }}
+        whileTap={{
+          scale: 0.95,
+          transition: {
+            duration: 0.2,
+          },
+        }}
+      >
         <p className="pointer-events-auto relative select-none pl-3 pr-3 font-plusJakarta text-white md:pl-5 md:pr-5">
           {label}
         </p>
-      </Link>
-    </m.div>
+      </m.div>
+    </Link>
   );
 };
 
