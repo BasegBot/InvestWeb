@@ -62,7 +62,8 @@ const Home: NextPageWithLayout = () => {
       className="ml-4 mr-6"
     />
   );
-  if (emotesUrls) {
+  // if the emotes are loaded, show the slideshow
+  if (emotesUrls.length > 0) {
     slideShow = (
       <Image
         src={emotesUrls[currentEmote]}
