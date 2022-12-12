@@ -40,7 +40,7 @@ function NavBar({ options }: NavProps) {
   const [isActive, setActive] = useState(false);
   return (
     <m.div
-      className="pointer-events-none fixed inline-grid w-screen grid-cols-2 font-plusJakarta text-2xl lg:grid-cols-3"
+      className="pointer-events-none fixed inline-grid w-screen grid-cols-2 bg-zinc-900 font-plusJakarta text-2xl lg:grid-cols-3"
       initial="initial"
       animate="animate"
       variants={containerAnimation}

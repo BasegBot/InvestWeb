@@ -42,9 +42,9 @@ interface NavTemplate {
 
 const homeMain: NavTemplate[] = [
   { content: <DefaultNavOption label="Home" href="/" /> },
-  { content: <DefaultNavOption label="About" href="/about" /> },
+  // { content: <DefaultNavOption label="About" href="/about" /> },
   { content: <DefaultNavOption label="Team" href="/team" /> },
-  { content: <DefaultNavOption label="Contact" href="/contact" /> },
+  // { content: <DefaultNavOption label="Contact" href="/contact" /> },
 ];
 
 export { type NavTemplate, homeMain };
