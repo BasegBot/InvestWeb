@@ -14,29 +14,13 @@ function Team() {
       <div className="flex min-h-screen flex-col items-center justify-center py-2">
         <m.div
           className="grid w-[90vw] grid-cols-1 py-2 sm:grid-cols-2 md:grid-cols-4 lg:w-[75vw]"
+          variants={containerVariants}
           initial="initial"
           animate="animate"
-          variants={containerVariants}
-          transition={{
-            delay: 0.5,
-            duration: 1.0,
-            staggerChildren: 0.25,
-            type: "spring",
-            bounce: 0.5,
-            stiffness: 80,
-          }}
         >
           <m.div
             className="col-span-1 flex w-full items-center justify-center bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pt-[200px] pb-[100px] font-plusJakarta text-transparent sm:col-span-2 md:col-span-4"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              delay: 0.5,
-              duration: 1.0,
-              type: "spring",
-              bounce: 0.5,
-              stiffness: 80,
-            }}
+            variants={headerVariants}
           >
             <m.h1 className="text-6xl">people</m.h1>
           </m.div>
@@ -104,6 +88,9 @@ const containerVariants: Variants = {
       duration: 2,
       delayChildren: 0.5,
       staggerChildren: 0.25,
+      type: "spring",
+      bounce: 0.5,
+      stiffness: 80,
     },
   },
 };
@@ -127,6 +114,24 @@ const rightCardVariants: Variants = {
   animate: {
     opacity: 1,
     x: 0,
+  },
+};
+
+const headerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: 100,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.5,
+      duration: 1.0,
+      type: "spring",
+      bounce: 0.5,
+      stiffness: 80,
+    },
   },
 };
 
