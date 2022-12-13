@@ -50,6 +50,7 @@ interface NavTemplate {
 const homeMain: NavTemplate[] = [
   { content: <DefaultNavOption label="Home" href="/" /> },
   // { content: <DefaultNavOption label="About" href="/about" /> },
+  { content: <DefaultNavOption label="Dashboard" href="/dashboard" /> },
   { content: <DefaultNavOption label="Team" href="/team" /> },
   // { content: <DefaultNavOption label="Contact" href="/contact" /> },
 ];
