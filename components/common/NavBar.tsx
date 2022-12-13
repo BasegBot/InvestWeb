@@ -8,63 +8,21 @@ interface NavProps {
   options: NavTemplate[];
 }
 
-// nav bar animation, fades in and then animates the children
-const containerAnimation: Variants = {
-  initial: {
-    opacity: 1,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 2,
-      delayChildren: 0.5,
-      staggerChildren: 0.25,
-    },
-  },
-};
-
-// default animation for nav bar items
-const itemAnimation: Variants = {
-  initial: {
-    opacity: 0,
-    x: 100,
-  },
-  animate: {
-    opacity: 1,
-    x: 0,
-  },
-};
-
 function NavBar({ options }: NavProps) {
   const [navList, setNavList] = useState(options);
   const [isActive, setActive] = useState(false);
   return (
     <m.div
       className="pointer-events-none fixed inline-grid w-screen grid-cols-2 bg-zinc-900 font-plusJakarta text-2xl lg:grid-cols-3"
+      variants={containerVariants}
       initial="initial"
       animate="animate"
-      variants={containerAnimation}
     >
       <m.div
-        className="mr-auto flex flex-row items-center justify-center p-2 sm:p-7"
-        variants={itemAnimation}
+        className="mr-auto flex flex-row items-center justify-center px-2 pt-5 pb-5 sm:p-7"
+        variants={itemVariants}
       >
-        <m.div
-          className="ml-4 mr-4 sm:m-0"
-          initial={{
-            scale: 1,
-            rotate: 0,
-          }}
-          animate={{
-            scale: 1,
-            rotate: 360,
-            transition: {
-              duration: 4,
-              type: "spring",
-              stiffness: 20,
-            },
-          }}
-        >
+        <m.div className="ml-4 mr-4 sm:m-0" variants={logoContainerVariants}>
           <Link
             key="InvestBotImg"
             href="/"
@@ -87,7 +45,12 @@ function NavBar({ options }: NavProps) {
           >
             InvestBot
           </Link>
-          <h1 className="flex flex-row items-center justify-center sm:hidden">
+          <h1
+            className="flex cursor-pointer flex-row items-center justify-center sm:hidden"
+            onClick={() => {
+              setActive(!isActive);
+            }}
+          >
             InvestBot
           </h1>
           <p className="hidden text-xs text-gray-400 sm:block">
@@ -118,7 +81,7 @@ function NavBar({ options }: NavProps) {
       </m.div>
       <m.div
         className="mr-auto ml-auto hidden flex-row items-center justify-center lg:flex"
-        variants={itemAnimation}
+        variants={itemVariants}
       >
         {navList.map((nav, index) => (
           <Fragment key={index}>{nav.content}</Fragment>
@@ -126,7 +89,7 @@ function NavBar({ options }: NavProps) {
       </m.div>
       <m.div
         className="ml-auto flex flex-row items-center justify-center p-2 sm:p-7"
-        variants={itemAnimation}
+        variants={itemVariants}
       >
         <p className="pointer-events-auto select-none pr-5 text-white">
           Login WIP
@@ -139,21 +102,20 @@ function NavBar({ options }: NavProps) {
             // hiddden by default, when active is true, animate in
             className="pointer-events-auto z-10 flex w-screen flex-col items-center overflow-hidden bg-zinc-800 bg-opacity-70 pt-5 backdrop-blur lg:hidden"
             // have it take up the entire screen, animate in by expanding from the bottom of the nav bar to the bottom of the screen
-            // TODO: struggled with getting children staggers/delays to work
-            initial={{ height: 0 }}
-            animate={{ height: "100vh" }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.5 }}
+            variants={mobileContainerVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
             {navList.map((nav, index) => (
               <m.div
                 key={index}
-                custom={index}
-                className="pointer-events-auto flex w-[90%] flex-row items-center justify-center border-t-[1px] border-b-[1px] border-zinc-700 p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
-                transition={{ duration: 0.3 }}
+                className="pointer-events-auto flex w-[90%] flex-row items-center justify-center border-b-[1px] border-zinc-700 p-4"
+                variants={mobileItemVariants}
+                whileHover={{
+                  backgroundColor: "rgba(0, 0, 0, 0.4)",
+                  transition: { duration: 0.2 },
+                }}
                 onClick={() => {
                   setActive(false);
                 }}
@@ -167,5 +129,86 @@ function NavBar({ options }: NavProps) {
     </m.div>
   );
 }
+
+// nav bar animation, fades in and then animates the children
+const containerVariants: Variants = {
+  initial: {
+    opacity: 1,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 2,
+      delayChildren: 0.5,
+      staggerChildren: 0.25,
+    },
+  },
+};
+
+// default animation for nav bar items
+const itemVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 100,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+  },
+};
+
+// logo animation
+const logoContainerVariants: Variants = {
+  initial: {
+    scale: 1,
+    rotate: 0,
+  },
+  animate: {
+    scale: 1,
+    rotate: 360,
+    transition: {
+      duration: 4,
+      type: "spring",
+      stiffness: 20,
+    },
+  },
+};
+
+// mobile nav bar container animation
+const mobileContainerVariants: Variants = {
+  initial: {
+    height: 0,
+  },
+  animate: {
+    height: "100vh",
+    transition: {
+      duration: 0.5,
+      staggerChildren: 0.15,
+    },
+  },
+  exit: {
+    height: 0,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
+
+// mobile nav bar item animation
+const mobileItemVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: -150,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      type: "spring",
+      bounce: 0.3,
+    },
+  },
+};
 
 export default NavBar;

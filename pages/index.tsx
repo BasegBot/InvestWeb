@@ -84,46 +84,34 @@ const Home: NextPageWithLayout = () => {
         <div className="inline-grid grid-cols-1 gap-10 text-white md:grid-cols-3">
           <m.div
             className="flex flex-col font-plusJakarta font-semibold md:col-span-2"
-            initial={{ opacity: 0, y: -100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              delay: 0.5,
-              duration: 2.5,
-              type: "spring",
-              bounce: 0.5,
-              stiffness: 150,
-            }}
+            variants={sloganContainerVariants}
+            initial="initial"
+            animate="animate"
           >
             <m.div
-              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, staggerChildren: 0.2, duration: 1.0 }}
+              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-2 text-transparent"
+              variants={sloganHeaderVariants}
             >
-              <m.h1 className="text-8xl">Buy high</m.h1>
-              <m.h1 className="text-8xl">Sell low</m.h1>
+              <h1 className="text-8xl">Buy high</h1>
+            </m.div>
+            <m.div
+              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-2 text-transparent"
+              variants={sloganHeaderVariants}
+            >
+              <h1 className="text-8xl">Sell low</h1>
             </m.div>
             <m.h2
               className="pt-2 font-medium italic text-gray-200"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.5, duration: 1.0 }}
+              variants={sloganSecondaryVariants}
             >
               ...or something like that
             </m.h2>
           </m.div>
           <m.div
             className="flex items-center justify-center"
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            transition={{
-              delay: 1.5,
-              staggerChildren: 0.2,
-            }}
+            variants={slideShowVariants}
+            initial="initial"
+            animate="animate"
           >
             {slideShow}
           </m.div>
@@ -131,6 +119,60 @@ const Home: NextPageWithLayout = () => {
       </div>
     </>
   );
+};
+
+const sloganContainerVariants = {
+  initial: {
+    opacity: 0,
+    y: -100,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.5,
+      duration: 2.5,
+      type: "spring",
+      bounce: 0.5,
+      stiffness: 150,
+      delayChildren: 0.5,
+      staggerChildren: 1.0,
+    },
+  },
+};
+
+const sloganHeaderVariants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+  },
+};
+
+const sloganSecondaryVariants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      delay: 3.5,
+    },
+  },
+};
+
+const slideShowVariants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      delay: 2.0,
+      duration: 1.0,
+    },
+  },
 };
 
 // set the layout for the page, this is used to wrap the page in a layout
