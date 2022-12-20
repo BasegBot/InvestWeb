@@ -4,25 +4,28 @@ import Link from "next/link";
 function NavBar() {
   return (
     <m.div
-      className="mr-2 flex h-full w-24 flex-col items-center justify-between bg-zinc-800 p-1"
+      className="mr-2 flex h-24 w-full flex-row items-center justify-between bg-zinc-800 p-1 lg:h-screen lg:w-24 lg:flex-col"
       variants={navContainerVariants}
       initial="initial"
       animate="animate"
     >
-      <m.div className="flex flex-col pt-5" variants={navStripVariants}>
-        <m.div variants={navIconVariants} className="pb-5">
+      <m.div
+        className="flex flex-row pl-5 lg:flex-col lg:pl-0 lg:pt-5"
+        variants={navStripVariants}
+      >
+        <m.div variants={navIconVariants} className="pr-5 lg:pr-0 lg:pb-5">
           <Link href="/dashboard">
             <DashIcon />
           </Link>
         </m.div>
-        <m.div variants={navIconVariants} className="pb-5">
+        <m.div variants={navIconVariants} className="pr-5 lg:pr-0 lg:pb-5">
           <Link href="/dashboard/ranking">
             <RankingIcon />
           </Link>
         </m.div>
       </m.div>
       <m.div
-        className="flex w-full flex-col items-center justify-center pb-5"
+        className="flex flex-row items-center justify-center pr-5 lg:w-full lg:flex-col lg:pr-0 lg:pb-5"
         variants={navStripVariants}
       >
         <Link href="/">
