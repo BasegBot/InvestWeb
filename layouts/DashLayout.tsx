@@ -34,7 +34,7 @@ function DashLayout(props: DashLayoutProps) {
         <meta property="og:site_name" content="InvestBot" />
       </Head>
 
-      <div className="flex h-screen w-screen flex-row overflow-hidden">
+      <div className="flex h-screen w-screen flex-col overflow-hidden lg:flex-row">
         {/* dashboard nav bar */}
         <LazyMotion features={domAnimation}>
           <AnimatePresence mode="wait">
@@ -46,7 +46,7 @@ function DashLayout(props: DashLayoutProps) {
           <AnimatePresence mode="wait">
             <m.div
               key={router.route.concat("layout-fade")}
-              className="h-screen w-screen"
+              className="w-screen overflow-y-scroll"
               variants={containerVariants}
               initial="initial"
               animate="animate"
