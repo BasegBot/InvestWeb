@@ -169,7 +169,7 @@ const logoContainerVariants: Variants = {
     transition: {
       duration: 4,
       type: "spring",
-      stiffness: 20,
+      stiffness: 15,
     },
   },
 };
