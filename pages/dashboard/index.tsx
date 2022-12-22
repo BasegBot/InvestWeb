@@ -17,31 +17,31 @@ function Dashboard() {
         animate="animate"
       >
         <m.div
-          className="col-span-1 m-2 bg-zinc-800"
+          className="col-span-1 m-2 rounded-2xl bg-zinc-800 p-3"
           variants={gridItemVariants}
         >
           1
         </m.div>
         <m.div
-          className="col-span-1 row-span-3 m-2 bg-zinc-800 lg:col-span-3 lg:row-span-1"
+          className="col-span-1 row-span-3 m-2 rounded-2xl bg-zinc-800 p-3 lg:col-span-3 lg:row-span-1"
           variants={gridItemVariants}
         >
           2
         </m.div>
         <m.div
-          className="col-span-1 m-2 bg-zinc-800"
+          className="col-span-1 m-2 rounded-2xl bg-zinc-800 p-3"
           variants={gridItemVariants}
         >
           3
         </m.div>
         <m.div
-          className="col-span-1 row-span-4 m-2 bg-zinc-800 lg:col-span-4 lg:row-span-1"
+          className="col-span-1 row-span-4 m-2 rounded-2xl bg-zinc-800 p-3 lg:col-span-4 lg:row-span-1"
           variants={gridItemVariants}
         >
           4
         </m.div>
         <m.div
-          className="col-span-1 m-2 bg-zinc-800"
+          className="col-span-1 m-2 rounded-2xl bg-zinc-800 p-3"
           variants={gridItemVariants}
         >
           5
