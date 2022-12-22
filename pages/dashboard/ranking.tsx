@@ -28,14 +28,16 @@ function Ranking() {
           initial="initial"
           animate="animate"
         >
+          {/* hidden if smaller than lg */}
           <m.h1
             className="hidden bg-gradient-to-tr from-purple-500 to-purple-100 bg-clip-text py-10 text-center font-plusJakarta text-5xl font-bold text-white text-transparent lg:block lg:text-6xl"
             variants={headerVariants}
           >
             Top Investors
           </m.h1>
+          {/* TODO: responsive for extremely skinny displays (i.e. galaxy fold), or really for mobile entirely so info is not lost */}
           <m.div
-            className="inline-grid w-full rounded-t-2xl bg-zinc-800 bg-opacity-70 p-3 pt-4 text-xl backdrop-blur lg:text-2xl"
+            className="text-md inline-grid w-full rounded-t-2xl bg-zinc-800 bg-opacity-70 p-3 pt-4 backdrop-blur sm:text-xl"
             variants={rankingCardVariants}
             initial="initial"
             animate="animate"
