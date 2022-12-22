@@ -37,8 +37,6 @@ const Home: NextPageWithLayout = () => {
         setEmotes(emoteUrls);
         setCurrentEmote(Math.floor(Math.random() * emoteUrls.length));
       });
-    console.log(currentEmote);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

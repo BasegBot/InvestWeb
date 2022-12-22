@@ -116,8 +116,6 @@ const RankingIcon = () => {
 const ActiveLink = (props: { href: string; children: React.ReactNode }) => {
   const router = useRouter();
   let styling = "text-white";
-  console.log(router.pathname);
-  console.log(props.href);
   if (router.pathname === props.href) {
     styling = "text-[#a855f7]";
   }
