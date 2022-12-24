@@ -23,7 +23,12 @@ function HomeLayout(props: HomeLayoutProps) {
   // get the current route for animation purposes
   const router = useRouter();
   return (
-    <>
+    <m.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={containerVariants}
+    >
       <Head>
         <title>InvestBot</title>
         <meta name="description" content="Serving anny's community est. 2022" />
@@ -59,7 +64,7 @@ function HomeLayout(props: HomeLayoutProps) {
           </m.div>
         </AnimatePresence>
       </LazyMotion>
-    </>
+    </m.div>
   );
 }
 

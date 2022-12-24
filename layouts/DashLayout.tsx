@@ -18,7 +18,13 @@ function DashLayout(props: DashLayoutProps) {
   // get the current route for animation purposes
   const router = useRouter();
   return (
-    <>
+    <m.div
+      className="bg-gradient-to-t from-zinc-900 to-[#202737b6]"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={containerVariants}
+    >
       <Head>
         <title>Dashboard - InvestBot</title>
         <meta name="description" content="Dashboard statistics for InvestBot" />
@@ -57,7 +63,7 @@ function DashLayout(props: DashLayoutProps) {
           </AnimatePresence>
         </LazyMotion>
       </div>
-    </>
+    </m.div>
   );
 }
 
