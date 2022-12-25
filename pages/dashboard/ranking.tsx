@@ -6,15 +6,75 @@ import { fakeDataEntry } from "../api/fakeRanking";
 
 function Ranking() {
   const [sortBy, setSortBy] = useState("netWorth");
+  const [sortAsc, setSortAsc] = useState(false);
   const [fakeData, setFakeData] = useState([]);
 
   useEffect(() => {
-    fetch(`/api/fakeRanking?s=${sortBy}`)
+    // fetch data from api on change to sort method
+    fetch(`/api/fakeRanking?s=${sortBy}&a=${sortAsc}`)
       .then((res) => res.json())
       .then((data) => {
         setFakeData(data.data);
       });
-  }, [sortBy]);
+  }, [sortBy, sortAsc]);
+
+  const SortSVG = (props: { sortType: string; children?: ReactElement }) => {
+    // if not current sort, return a line, otherwise return an arrow corresponding to sortAsc
+    if (sortBy != props.sortType) {
+      return (
+        <m.svg
+          className="ml-2"
+          origin="center"
+          width="15"
+          height="15"
+          viewBox="0 0 6 6"
+          x={0}
+          y={0}
+        >
+          <m.line
+            x1="1"
+            y1="3"
+            x2="5"
+            y2="3"
+            stroke="white"
+            stroke-linecap="round"
+          />
+        </m.svg>
+      );
+    }
+    return (
+      <m.svg
+        className="ml-2"
+        origin="center"
+        width="15"
+        height="15"
+        viewBox="0 0 330 330"
+        x={0}
+        y={0}
+        // if asc, rotate 180
+        animate={{ rotate: sortAsc ? 180 : 0 }}
+      >
+        <m.path
+          d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"
+          fill="white"
+          stroke="white"
+          strokeWidth="15"
+          strokeLinecap="round"
+        />
+      </m.svg>
+    );
+  };
+
+  const setSortMethod = (sortType: string) => {
+    // if same sort, toggle asc
+    // a change in sort means asc should be false for intuitive behavior
+    if (sortBy == sortType) {
+      setSortAsc(!sortAsc);
+    } else {
+      setSortAsc(false);
+      setSortBy(sortType);
+    }
+  };
 
   return (
     <>
@@ -37,37 +97,64 @@ function Ranking() {
           </m.h1>
           {/* TODO: responsive for extremely skinny displays (i.e. galaxy fold), or really for mobile entirely so info is not lost */}
           <m.div
-            className="text-md inline-grid w-full rounded-t-2xl bg-zinc-800 bg-opacity-70 p-3 pt-4 backdrop-blur sm:text-xl"
+            className="text-md inline-grid w-full rounded-t-2xl bg-zinc-800 bg-opacity-70 p-3 pt-4 sm:text-xl"
             variants={rankingCardVariants}
             initial="initial"
             animate="animate"
           >
-            <m.div className="inline-grid w-full grid-flow-col grid-cols-[0.75fr_4fr_3fr_2fr] gap-2 border-b-2 border-zinc-400 px-5 pb-3 text-right text-gray-300 md:grid-cols-[0.5fr_4fr_repeat(3,_2fr)_1.5fr]">
-              <m.h1 className="text-left md:text-center">#</m.h1>
-              <m.h1
-                className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left"
-                onClick={() => setSortBy("name")}
+            {/* Column names and arrows */}
+            <div className="inline-grid w-full grid-flow-col grid-cols-[0.75fr_4fr_3fr_2fr] gap-2 border-b-2 border-zinc-400 px-5 pb-3 text-right text-gray-300 md:grid-cols-[0.5fr_4fr_repeat(3,_2fr)_1.5fr]">
+              <h1 className="text-left md:text-center">#</h1>
+              <div
+                className="pointer-events-auto flex cursor-pointer flex-row items-center justify-start"
+                onClick={() => setSortMethod("name")}
               >
-                Name
-              </m.h1>
-              <m.h1 onClick={() => setSortBy("netWorth")}>Assets</m.h1>
-              <m.h1
-                className="hidden md:block"
-                onClick={() => setSortBy("points")}
+                <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                  Name
+                </h1>
+                <SortSVG sortType="name" />
+              </div>
+              <div
+                className="pointer-events-auto flex cursor-pointer flex-row items-center justify-end"
+                onClick={() => setSortMethod("netWorth")}
               >
-                Points
-              </m.h1>
-              <m.h1
-                className="hidden md:block"
-                onClick={() => setSortBy("shares")}
+                <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                  Assets
+                </h1>
+                <SortSVG sortType="netWorth" />
+              </div>
+              <div
+                className="pointer-events-auto hidden cursor-pointer flex-row items-center justify-end md:flex"
+                onClick={() => setSortMethod("points")}
               >
-                Shares
-              </m.h1>
-              <m.h1 onClick={() => setSortBy("dailyChange")}>Daily</m.h1>
-            </m.div>
+                <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                  Points
+                </h1>
+                <SortSVG sortType="points" />
+              </div>
+              <div
+                className="pointer-events-auto hidden cursor-pointer flex-row items-center justify-end md:flex"
+                onClick={() => setSortMethod("shares")}
+              >
+                <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                  Shares
+                </h1>
+                <SortSVG sortType="shares" />
+              </div>
+              <div
+                className="pointer-events-auto flex cursor-pointer flex-row items-center justify-end"
+                onClick={() => setSortMethod("dailyChange")}
+              >
+                <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                  Daily
+                </h1>
+                <SortSVG sortType="dailyChange" />
+              </div>
+            </div>
             {
-              // TODO: add arrow to show which column is being sorted by and which direction
+              // generate table rows
               fakeData.map((entry: fakeDataEntry, index) => {
+                // if daily change is negative, make it red
                 let changeClass = " text-lime-500";
                 if (entry.dailyChangePercent < 0) {
                   changeClass = " text-red-500";
@@ -105,6 +192,7 @@ function Ranking() {
   );
 }
 
+// entire container page animation
 const containerVariants: Variants = {
   initial: {
     opacity: 1,
@@ -122,6 +210,7 @@ const containerVariants: Variants = {
   },
 };
 
+// header animation if needed
 const headerVariants: Variants = {
   initial: {
     opacity: 0,
@@ -140,6 +229,7 @@ const headerVariants: Variants = {
   },
 };
 
+// table container animation
 const rankingCardVariants: Variants = {
   initial: {
     opacity: 0,

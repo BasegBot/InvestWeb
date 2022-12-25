@@ -6,7 +6,7 @@ function NavBar() {
   return (
     <div className="m-3">
       <m.div
-        className="flex min-h-[5rem] w-full flex-row items-center justify-between rounded-2xl bg-zinc-800 p-1 lg:h-full lg:w-24 lg:flex-col"
+        className="flex min-h-[5rem] w-full flex-row items-center justify-between rounded-2xl bg-zinc-800 bg-opacity-70 p-1 lg:h-full lg:w-24 lg:flex-col"
         variants={navContainerVariants}
         initial="initial"
         animate="animate"
