@@ -143,7 +143,7 @@ function Ranking() {
               </div>
               <div
                 className="pointer-events-auto flex cursor-pointer flex-row items-center justify-end"
-                onClick={() => setSortMethod("dailyChange")}
+                onClick={() => setSortMethod("dailyChangePercent")}
               >
                 <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
                   Daily
