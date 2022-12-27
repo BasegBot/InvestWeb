@@ -81,25 +81,25 @@ const Home: NextPageWithLayout = () => {
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="inline-grid grid-cols-1 gap-10 text-white md:grid-cols-3">
           <m.div
-            className="flex flex-col font-plusJakarta font-semibold md:col-span-2"
+            className="flex flex-col font-plusJakarta text-7xl font-semibold sm:text-8xl md:col-span-2"
             variants={sloganContainerVariants}
             initial="initial"
             animate="animate"
           >
             <m.div
-              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-2 text-transparent"
+              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-3 text-transparent"
               variants={sloganHeaderVariants}
             >
-              <h1 className="text-8xl">Buy high</h1>
+              <h1>Buy high</h1>
             </m.div>
             <m.div
-              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-2 text-transparent"
+              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-3 text-transparent"
               variants={sloganHeaderVariants}
             >
-              <h1 className="text-8xl">Sell low</h1>
+              <h1>Sell low</h1>
             </m.div>
             <m.h2
-              className="pt-2 font-medium italic text-gray-200"
+              className="pt-2 text-sm font-medium text-gray-200"
               variants={sloganSecondaryVariants}
             >
               ...or something like that
