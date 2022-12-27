@@ -31,7 +31,10 @@ export default async function handler(
       data = data.reverse();
     }
   }
-
+  // fake loading time
+  await new Promise((resolve) =>
+    setTimeout(resolve, 250 + Math.random() * 1000)
+  );
   res.status(200).json({ data });
 }
 

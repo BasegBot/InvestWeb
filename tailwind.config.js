@@ -10,7 +10,7 @@ module.exports = {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
         plusJakarta: ["Plus Jakarta Sans", "sans-serif"],
-        spaceMono: ["Space Mono", "monospace"],
+        robotoMono: ["Roboto Mono", "monospace"],
       },
     },
   },
