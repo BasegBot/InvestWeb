@@ -9,7 +9,7 @@ function Team() {
   return (
     <>
       <Head>
-        <title>Team - InvestBot</title>
+        <title>Team - toffee</title>
       </Head>
       <div className="flex min-h-screen flex-col items-center justify-center py-2">
         <m.div
@@ -87,7 +87,7 @@ const containerVariants: Variants = {
     transition: {
       duration: 2,
       delayChildren: 0.5,
-      staggerChildren: 0.25,
+      staggerChildren: 0.2,
       type: "spring",
       bounce: 0.5,
       stiffness: 80,

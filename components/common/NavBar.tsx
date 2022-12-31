@@ -13,7 +13,7 @@ function NavBar({ options }: NavProps) {
   const [isActive, setActive] = useState(false);
   return (
     <m.div
-      className="pointer-events-none fixed inline-grid w-screen grid-cols-2 bg-zinc-900 font-plusJakarta text-xl sm:text-2xl lg:grid-cols-3"
+      className="pointer-events-none fixed z-50 inline-grid w-screen grid-cols-2 bg-zinc-900 bg-opacity-90 font-plusJakarta text-2xl lg:grid-cols-3"
       variants={containerVariants}
       initial="initial"
       animate="animate"
@@ -24,13 +24,13 @@ function NavBar({ options }: NavProps) {
       >
         <m.div className="ml-4 mr-4 sm:m-0" variants={logoContainerVariants}>
           <Link
-            key="InvestBotImg"
+            key="toffeeImg"
             href="/"
             className="pointer-events-auto flex flex-row items-center justify-center"
           >
             <Image
               src="/img/logo.webp"
-              alt="InvestBot Logo"
+              alt="toffee logo"
               width={64}
               height={64}
               className="mr-8 rounded-b-full"
@@ -39,26 +39,26 @@ function NavBar({ options }: NavProps) {
         </m.div>
         <div className="pointer-events-auto flex select-none flex-col items-start justify-center pr-2 font-plusJakarta text-white sm:pr-5">
           <Link
-            key="InvestBot"
+            key="toffee"
             href="/"
             className="hidden flex-row items-center justify-center sm:flex"
           >
-            InvestBot
+            toffee
           </Link>
           <h1
-            className="flex cursor-pointer flex-row items-center justify-center sm:hidden"
+            className="mr-3 flex cursor-pointer flex-row items-center justify-center sm:mr-auto sm:hidden"
             onClick={() => {
               setActive(!isActive);
             }}
           >
-            InvestBot
+            toffee
           </h1>
           <p className="hidden text-xs text-gray-400 sm:block">
             Serving anny&apos;s community est. 2022
           </p>
         </div>
         <m.svg
-          className="pointer-events-auto cursor-pointer lg:hidden"
+          className="pointer-events-auto mt-2 cursor-pointer lg:hidden"
           origin="center"
           width="25"
           height="26"
@@ -98,7 +98,7 @@ function NavBar({ options }: NavProps) {
         {isActive && (
           <m.div
             // hiddden by default, when active is true, animate in
-            className="pointer-events-auto z-10 flex w-screen flex-col items-center overflow-hidden bg-zinc-800 bg-opacity-70 pt-5 backdrop-blur lg:hidden"
+            className="pointer-events-auto z-10 flex w-screen flex-col items-center overflow-hidden bg-zinc-800 bg-opacity-70 pt-5 lg:hidden"
             // have it take up the entire screen, animate in by expanding from the bottom of the nav bar to the bottom of the screen
             variants={mobileContainerVariants}
             initial="initial"
@@ -159,11 +159,11 @@ const itemVariants: Variants = {
 const logoContainerVariants: Variants = {
   initial: {
     scale: 1,
-    rotate: 0,
+    rotate: -90,
   },
   animate: {
     scale: 1,
-    rotate: 360,
+    rotate: 0,
     transition: {
       duration: 4,
       type: "spring",

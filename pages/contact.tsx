@@ -7,7 +7,7 @@ function About() {
   return (
     <>
       <Head>
-        <title>Contact - InvestBot</title>
+        <title>Contact - toffee</title>
       </Head>
       <div className="flex min-h-screen flex-col items-center justify-center py-2">
         <p>contact</p>
