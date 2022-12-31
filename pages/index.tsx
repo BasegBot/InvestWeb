@@ -54,7 +54,7 @@ const Home: NextPageWithLayout = () => {
   let slideShow = (
     <Image
       src="/img/logo.webp"
-      alt="InvestBot Logo"
+      alt="toffee Logo"
       width={128}
       height={128}
       className="ml-4 mr-6"
@@ -76,34 +76,52 @@ const Home: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Home - InvestBot</title>
+        <title>Home - toffee</title>
       </Head>
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="inline-grid grid-cols-1 gap-10 text-white md:grid-cols-3">
           <m.div
-            className="flex flex-col font-plusJakarta text-7xl font-semibold sm:text-8xl md:col-span-2"
+            className="flex flex-col from-purple-400 to-pink-600 font-plusJakarta text-7xl font-semibold sm:text-8xl md:col-span-2"
             variants={sloganContainerVariants}
             initial="initial"
             animate="animate"
           >
             <m.div
-              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-3 text-transparent"
+              className="flex flex-row items-center"
               variants={sloganHeaderVariants}
             >
-              <h1>Buy high</h1>
+              <h1 className="bg-gradient-to-b bg-clip-text text-transparent">
+                t
+              </h1>
+              <h1>ax-free</h1>
             </m.div>
             <m.div
-              className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text p-3 text-transparent"
+              className="flex flex-row items-center"
               variants={sloganHeaderVariants}
             >
-              <h1>Sell low</h1>
+              <h1 className="bg-gradient-to-tl bg-clip-text text-transparent">
+                off
+              </h1>
+              <h1>line</h1>
             </m.div>
-            <m.h2
-              className="pt-2 text-sm font-medium text-gray-200"
-              variants={sloganSecondaryVariants}
+            <m.div
+              className="flex flex-row items-center"
+              variants={sloganHeaderVariants}
             >
-              ...or something like that
-            </m.h2>
+              <h1 className="bg-gradient-to-l bg-clip-text text-transparent">
+                e
+              </h1>
+              <h1>mote</h1>
+            </m.div>
+            <m.div
+              className="flex flex-row items-center"
+              variants={sloganHeaderVariants}
+            >
+              <h1 className="bg-gradient-to-bl bg-clip-text text-transparent">
+                e
+              </h1>
+              <h1>xchange</h1>
+            </m.div>
           </m.div>
           <m.div
             className="flex items-center justify-center"
@@ -112,6 +130,17 @@ const Home: NextPageWithLayout = () => {
             animate="animate"
           >
             {slideShow}
+            <m.div
+              className="fixed"
+              variants={sloganSecondaryContainerVariants}
+            >
+              <m.h2
+                className="font-minecraft text-sm font-normal text-yellow-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.99)]"
+                variants={sloganSecondaryVariants}
+              >
+                currently in development!
+              </m.h2>
+            </m.div>
           </m.div>
         </div>
       </div>
@@ -133,8 +162,8 @@ const sloganContainerVariants = {
       type: "spring",
       bounce: 0.5,
       stiffness: 150,
-      delayChildren: 0.5,
-      staggerChildren: 1.0,
+      delayChildren: 1.0,
+      staggerChildren: 0.45,
     },
   },
 };
@@ -148,14 +177,27 @@ const sloganHeaderVariants = {
   },
 };
 
-const sloganSecondaryVariants = {
+const sloganSecondaryContainerVariants = {
   initial: {
     opacity: 0,
+    rotate: 0,
   },
   animate: {
     opacity: 1,
+    rotate: -15,
     transition: {
       delay: 3.5,
+      duration: 1.0,
+    },
+  },
+};
+
+const sloganSecondaryVariants = {
+  animate: {
+    fontSize: ["1.5rem", "1.575rem", "1.5rem"],
+    transition: {
+      duration: 0.5,
+      repeat: Infinity,
     },
   },
 };

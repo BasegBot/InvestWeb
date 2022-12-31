@@ -30,18 +30,18 @@ function HomeLayout(props: HomeLayoutProps) {
       variants={containerVariants}
     >
       <Head>
-        <title>InvestBot</title>
+        <title>toffee</title>
         <meta name="description" content="Serving anny's community est. 2022" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#c084fc" />
-        <meta property="og:title" content="InvestBot" />
+        <meta property="og:title" content="toffee" />
         <meta
           property="og:description"
           content="Serving anny's community est. 2022"
         />
         <meta property="og:image" content="/img/logo.webp" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="InvestBot" />
+        <meta property="og:site_name" content="toffee" />
       </Head>
 
       <LazyMotion features={domAnimation}>

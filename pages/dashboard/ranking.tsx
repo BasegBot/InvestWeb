@@ -75,7 +75,7 @@ function Ranking() {
   return (
     <>
       <Head>
-        <title>Ranking - InvestBot</title>
+        <title>Ranking - toffee</title>
       </Head>
       <div className="flex w-full justify-center">
         <div className="ml-3 flex w-full flex-col items-center justify-start font-robotoMono font-semibold lg:ml-0">
@@ -146,10 +146,13 @@ function Ranking() {
             {
               // if data is not loaded, loading div
               !dataLoaded ? (
-                <div className="mt-5 flex h-[100vh] w-full flex-col items-center justify-start">
+                <m.div
+                  className="mt-5 flex h-[100vh] w-full flex-col items-center justify-start"
+                  variants={rankingDataContainerVariants}
+                >
                   <Loading />
                   <h1 className="my-5">This is fake delay :)</h1>
-                </div>
+                </m.div>
               ) : (
                 <m.div
                   initial="initial"

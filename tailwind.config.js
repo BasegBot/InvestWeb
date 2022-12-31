@@ -11,6 +11,7 @@ module.exports = {
         roboto: ["Roboto", "sans-serif"],
         plusJakarta: ["Plus Jakarta Sans", "sans-serif"],
         robotoMono: ["Roboto Mono", "monospace"],
+        minecraft: ["Minecraft", "Roboto", "sans-serif"],
       },
     },
   },
