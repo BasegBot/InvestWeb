@@ -2,11 +2,10 @@ import { m } from "framer-motion";
 import { ReactElement, useEffect, useState } from "react";
 import HomeLayout from "../layouts/HomeLayout";
 import { homeMain } from "../layouts/NavTemplates";
-import type { NextPageWithLayout } from "./_app";
 import Image from "next/image";
 import Head from "next/head";
 
-const Home: NextPageWithLayout = () => {
+function Home() {
   let api7tvEmotes = `/api/7tv/emotes?c=61ad997effa9aba101bcfddf`;
   const [emotesUrls, setEmotes] = useState([]);
   const [currentEmote, setCurrentEmote] = useState(0);
@@ -79,49 +78,25 @@ const Home: NextPageWithLayout = () => {
         <title>Home - toffee</title>
       </Head>
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="inline-grid grid-cols-1 gap-10 text-white md:grid-cols-3">
+        <div className="gap inline-grid grid-cols-1 gap-20 text-white md:grid-cols-3">
           <m.div
-            className="flex flex-col from-purple-400 to-pink-600 font-plusJakarta text-7xl font-semibold sm:text-8xl md:col-span-2"
+            className="flex flex-col from-purple-400 to-pink-600 font-plusJakarta md:col-span-2"
             variants={sloganContainerVariants}
             initial="initial"
             animate="animate"
           >
-            <m.div
-              className="flex flex-row items-center"
-              variants={sloganHeaderVariants}
-            >
-              <h1 className="bg-gradient-to-b bg-clip-text text-transparent">
-                t
-              </h1>
-              <h1>ax-free</h1>
-            </m.div>
-            <m.div
-              className="flex flex-row items-center"
-              variants={sloganHeaderVariants}
-            >
-              <h1 className="bg-gradient-to-tl bg-clip-text text-transparent">
+            <div className="flex flex-row text-8xl font-bold italic">
+              <m.h1 variants={sloganHeaderVariants}>t</m.h1>
+              <m.h1 className="text-orange-400" variants={sloganHeaderVariants}>
                 off
-              </h1>
-              <h1>line</h1>
-            </m.div>
-            <m.div
-              className="flex flex-row items-center"
-              variants={sloganHeaderVariants}
-            >
-              <h1 className="bg-gradient-to-l bg-clip-text text-transparent">
-                e
-              </h1>
-              <h1>mote</h1>
-            </m.div>
-            <m.div
-              className="flex flex-row items-center"
-              variants={sloganHeaderVariants}
-            >
-              <h1 className="bg-gradient-to-bl bg-clip-text text-transparent">
-                e
-              </h1>
-              <h1>xchange</h1>
-            </m.div>
+              </m.h1>
+              <m.h1 variants={sloganHeaderVariants}>ee</m.h1>
+            </div>
+            <div className="text-xl italic">
+              <m.h2 variants={sloganHeaderVariants}>
+                a tax-free offline emote exchange utility
+              </m.h2>
+            </div>
           </m.div>
           <m.div
             className="flex items-center justify-center"
@@ -146,7 +121,7 @@ const Home: NextPageWithLayout = () => {
       </div>
     </>
   );
-};
+}
 
 const sloganContainerVariants = {
   initial: {
@@ -163,7 +138,7 @@ const sloganContainerVariants = {
       bounce: 0.5,
       stiffness: 150,
       delayChildren: 1.0,
-      staggerChildren: 0.45,
+      staggerChildren: 0.1,
     },
   },
 };
@@ -171,9 +146,11 @@ const sloganContainerVariants = {
 const sloganHeaderVariants = {
   initial: {
     opacity: 0,
+    y: -15,
   },
   animate: {
     opacity: 1,
+    y: 0,
   },
 };
 
