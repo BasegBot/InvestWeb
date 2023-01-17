@@ -78,7 +78,7 @@ function Home() {
         <title>Home - toffee</title>
       </Head>
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="gap inline-grid grid-cols-1 gap-20 text-white md:grid-cols-3">
+        <div className="inline-grid grid-cols-1 gap-20 text-white md:grid-cols-3">
           <m.div
             className="flex flex-col from-purple-400 to-pink-600 font-plusJakarta md:col-span-2"
             variants={sloganContainerVariants}
