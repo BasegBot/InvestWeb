@@ -24,7 +24,7 @@ function NavBar() {
             variants={navIconVariants}
             className="pr-5 lg:pr-0 lg:pt-3 lg:pb-3"
           >
-            <ActiveLink href="/dashboard/ranking">
+            <ActiveLink href="/ranking">
               <RankingIcon />
             </ActiveLink>
           </m.div>

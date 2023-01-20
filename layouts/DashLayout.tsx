@@ -8,7 +8,6 @@ import {
 import Head from "next/head";
 import { useRouter } from "next/router";
 import NavBar from "../components/dashboard/NavBar";
-import { NavTemplate } from "./NavTemplates";
 
 interface DashLayoutProps {
   children: React.ReactNode;
