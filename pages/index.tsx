@@ -14,6 +14,10 @@ function Home() {
     fetch(api7tvEmotes)
       .then((res) => res.json())
       .then((data) => {
+        // if error, return
+        if (data.error) {
+          return;
+        }
         // get all emote URLs
         let emoteUrls = data.channel.user.emote_sets[0].emotes.map(
           (emote: any) => {
