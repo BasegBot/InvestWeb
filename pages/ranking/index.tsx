@@ -179,7 +179,10 @@ function Ranking() {
                             <h1 className="text-left md:text-center">
                               {index + 1}
                             </h1>
-                            <Link href={`/user/${entry.name}`}>
+                            <Link
+                              href={`/user/${entry.name}`}
+                              className="overflow-hidden"
+                            >
                               <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
                                 {entry.name}
                               </h1>
