@@ -1,7 +1,8 @@
-import type RedisInstance from "ioredis";
+// ioredis types
+import Redis from "ioredis";
 
 async function applyCache(
-  redis: RedisInstance,
+  redis: Redis,
   key: string,
   query: string,
   cacheTime: number
@@ -17,7 +18,7 @@ async function applyCache(
   }
 }
 
-async function authTwitch(redis: RedisInstance) {
+async function authTwitch(redis: Redis) {
   let auth = await redis.get("TWITCH.AUTH");
   if (auth) {
     return auth;
@@ -35,7 +36,7 @@ async function authTwitch(redis: RedisInstance) {
   }
 }
 
-async function fetchEndpoint(redis: RedisInstance, query: string) {
+async function fetchEndpoint(redis: Redis, query: string) {
   if (await redis.get("TWITCH.RATE_LIMIT")) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   } else {
@@ -55,7 +56,7 @@ async function fetchEndpoint(redis: RedisInstance, query: string) {
   return json;
 }
 
-async function getUserByName(redis: RedisInstance, username: string) {
+async function getUserByName(redis: Redis, username: string) {
   return await applyCache(
     redis,
     "TWITCH.USER_" + username,
@@ -64,7 +65,7 @@ async function getUserByName(redis: RedisInstance, username: string) {
   );
 }
 
-async function getUserByID(redis: RedisInstance, userID: string) {
+async function getUserByID(redis: Redis, userID: string) {
   return await applyCache(
     redis,
     "TWITCH.USER_" + userID,
@@ -73,7 +74,7 @@ async function getUserByID(redis: RedisInstance, userID: string) {
   );
 }
 
-async function getGlobalEmotes(redis: RedisInstance) {
+async function getGlobalEmotes(redis: Redis) {
   return await applyCache(
     redis,
     "TWITCH.GLOBAL_EMOTES",
@@ -82,7 +83,7 @@ async function getGlobalEmotes(redis: RedisInstance) {
   );
 }
 
-async function getChannelEmotes(redis: RedisInstance, channelID: string) {
+async function getChannelEmotes(redis: Redis, channelID: string) {
   return await applyCache(
     redis,
     "TWITCH.CHANNEL_EMOTES_" + channelID,

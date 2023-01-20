@@ -1,7 +1,7 @@
-import type RedisInstance from "ioredis";
+import Redis from "ioredis";
 
 async function applyCache(
-  redis: RedisInstance,
+  redis: Redis,
   key: string,
   query: string,
   gql: boolean,
@@ -19,7 +19,7 @@ async function applyCache(
 }
 
 async function fetchEndpoint(
-  redis: RedisInstance,
+  redis: Redis,
   query: string,
   gql: boolean = false
 ) {
@@ -53,7 +53,7 @@ async function fetchGQL(query: string) {
   return json;
 }
 
-async function getGlobalEmotes(redis: RedisInstance) {
+async function getGlobalEmotes(redis: Redis) {
   const gqlQuery = `query {
         namedEmoteSet(name: GLOBAL) {
             emote_count
@@ -84,7 +84,7 @@ async function getGlobalEmotes(redis: RedisInstance) {
   return await applyCache(redis, "7TV.GLOBAL_EMOTES", gqlQuery, true, 3600);
 }
 
-async function getChannelEmotes(redis: RedisInstance, channelID: string) {
+async function getChannelEmotes(redis: Redis, channelID: string) {
   const gqlQuery = `query {
         user(id: "${channelID}") {
             emote_sets {
