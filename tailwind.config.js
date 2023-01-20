@@ -13,6 +13,11 @@ module.exports = {
         robotoMono: ["Roboto Mono", "monospace"],
         minecraft: ["Minecraft", "Roboto", "sans-serif"],
       },
+      colors: {
+        "7tv": "#4fc2bc",
+        bttv: "#d50014",
+        ttv: "#9146FF",
+      },
     },
   },
   plugins: [],

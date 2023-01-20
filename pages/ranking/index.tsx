@@ -1,9 +1,10 @@
 import { m, Variants } from "framer-motion";
 import Head from "next/head";
+import Link from "next/link";
 import { ReactElement, useEffect, useState } from "react";
 import Loading from "../../components/common/Loading";
 import DashLayout from "../../layouts/DashLayout";
-import { fakeDataEntry } from "../api/fakeRanking";
+import { fakeDataEntry } from "../api/fakeUsers";
 
 function Ranking() {
   const [sortBy, setSortBy] = useState("netWorth");
@@ -14,7 +15,7 @@ function Ranking() {
   useEffect(() => {
     setDataLoaded(false);
     // fetch data from api on change to sort method
-    fetch(`/api/fakeRanking?s=${sortBy}&a=${sortAsc}`)
+    fetch(`/api/fakeUsers?s=${sortBy}&a=${sortAsc}`)
       .then((res) => res.json())
       .then((data) => {
         setFakeData(data.data);
@@ -78,13 +79,13 @@ function Ranking() {
         <title>Ranking - toffee</title>
       </Head>
       <div className="flex w-full justify-center">
-        <div className="ml-3 flex w-full flex-col items-center justify-start font-robotoMono font-semibold lg:ml-0">
+        <div className="ml-3 flex w-full max-w-7xl flex-col items-center justify-start font-plusJakarta font-semibold lg:ml-0">
           {/* hidden if smaller than lg */}
           <m.h1
-            className="hidden bg-gradient-to-tr from-purple-500 to-purple-100 bg-clip-text py-10 text-center font-plusJakarta text-5xl font-bold text-white text-transparent lg:block lg:text-6xl"
+            className="hidden py-10 text-center text-5xl font-normal text-pink-300 lg:block lg:text-6xl"
             variants={headerVariants}
           >
-            Top Investors
+            top investors
           </m.h1>
           {/* TODO: responsive for extremely skinny displays (i.e. galaxy fold), or really for mobile entirely so info is not lost */}
           <m.div
@@ -162,39 +163,44 @@ function Ranking() {
                 >
                   {
                     // generate table rows
-                    fakeData.map((entry: fakeDataEntry, index) => {
-                      // if daily change is negative, make it red
-                      let changeClass = " text-lime-500";
-                      if (entry.dailyChangePercent < 0) {
-                        changeClass = " text-red-500";
+                    fakeData.map(
+                      (entry: { [key: string]: any }, index: number) => {
+                        // if daily change is negative, make it red
+                        let changeClass = " text-lime-500";
+                        if (entry.daily_change_percent < 0) {
+                          changeClass = " text-red-500";
+                        }
+                        return (
+                          <m.div
+                            className="inline-grid w-full grid-flow-col grid-cols-[1fr_4fr_3fr_2fr] gap-2 border-b-2 border-zinc-700 px-5 py-2 text-right md:grid-cols-[0.5fr_4fr_repeat(3,_2fr)_1.5fr]"
+                            key={entry.id}
+                            variants={rankingDataLineVariants}
+                          >
+                            <h1 className="text-left md:text-center">
+                              {index + 1}
+                            </h1>
+                            <Link href={`/user/${entry.name}`}>
+                              <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                                {entry.name}
+                              </h1>
+                            </Link>
+                            <h1>{entry.net_worth.toLocaleString("en-US")}</h1>
+                            <h1 className="hidden md:block">
+                              {entry.points.toLocaleString("en-US")}
+                            </h1>
+                            <h1 className="hidden md:block">
+                              {entry.shares.toLocaleString("en-US")}
+                            </h1>
+                            <h1 className={changeClass}>
+                              {(
+                                Math.round(entry.daily_change_percent * 1000) /
+                                10
+                              ).toFixed(1) + "%"}
+                            </h1>
+                          </m.div>
+                        );
                       }
-                      return (
-                        <m.div
-                          className="inline-grid w-full grid-flow-col grid-cols-[1fr_4fr_3fr_2fr] gap-2 border-b-2 border-zinc-700 px-5 py-2 text-right md:grid-cols-[0.5fr_4fr_repeat(3,_2fr)_1.5fr]"
-                          key={entry.id}
-                          variants={rankingDataLineVariants}
-                        >
-                          <h1 className="text-left md:text-center">
-                            {index + 1}
-                          </h1>
-                          <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
-                            {entry.name}
-                          </h1>
-                          <h1>{entry.netWorth.toLocaleString("en-US")}</h1>
-                          <h1 className="hidden md:block">
-                            {entry.points.toLocaleString("en-US")}
-                          </h1>
-                          <h1 className="hidden md:block">
-                            {entry.shares.toLocaleString("en-US")}
-                          </h1>
-                          <h1 className={changeClass}>
-                            {(
-                              Math.round(entry.dailyChangePercent * 1000) / 10
-                            ).toFixed(1) + "%"}
-                          </h1>
-                        </m.div>
-                      );
-                    })
+                    )
                   }
                 </m.div>
               )
