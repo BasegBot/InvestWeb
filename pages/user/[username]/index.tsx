@@ -48,15 +48,12 @@ function UserPage() {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
-  // if json is empty
-  if (Object.keys(channelEmotes).length === 0 && errorCode !== 10000) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center text-3xl">
-        <Loading />
-      </div>
-    );
-  }
-  if (errorCode === 20000) {
+
+  if (errorCode !== null) {
+    // 20000 = user not found
+    // 10000 = 7tv api error
+    // 10100 = Twitch api error
+    const errorMsg = errorCode === 20000 ? "User not found" : "API error";
     return (
       <m.div
         className="flex h-screen w-full items-center justify-center text-3xl"
@@ -64,17 +61,24 @@ function UserPage() {
         animate={{ opacity: 1, y: 0, transition: { duration: 1.0 } }}
         exit={{ opacity: 0, y: -25 }}
       >
-        <p>User not found :c</p>
+        <p>{errorMsg}</p>
       </m.div>
     );
   }
-  if (!userData || Object.keys(userData).length === 0) {
+
+  // if json is empty
+  if (
+    Object.keys(channelEmotes).length === 0 ||
+    !userData ||
+    Object.keys(userData).length === 0
+  ) {
     return (
       <div className="flex h-screen w-full items-center justify-center text-3xl">
         <Loading />
       </div>
     );
   }
+
   return (
     <>
       <Head>
@@ -90,25 +94,27 @@ function UserPage() {
           <div className="col-span-10 mb-2 rounded-2xl bg-zinc-800 bg-opacity-70 p-3">
             <div className="flex items-center justify-between p-4">
               <div className="flex flex-row items-center">
-                <Image
-                  src={userData.avatar_url}
-                  alt="User avatar"
-                  width={140}
-                  height={140}
-                  className="fixed rounded-lg border-4"
-                  style={{
-                    borderColor: userData.badges[0]
-                      ? userData.badges[0].color
-                      : "grey",
-                    // "glow" effect
-                    boxShadow: `0px 0px 20px 1px ${
-                      userData.badges[0]
+                <div className="relative bottom-[70px] w-[169px]">
+                  <Image
+                    src={userData.avatar_url}
+                    alt="User avatar"
+                    width={140}
+                    height={140}
+                    className="absolute rounded-lg border-4"
+                    style={{
+                      borderColor: userData.badges[0]
                         ? userData.badges[0].color
-                        : "transparent"
-                    }`,
-                  }}
-                />
-                <div className="ml-[154px] flex-col">
+                        : "grey",
+                      // "glow" effect
+                      boxShadow: `0px 0px 20px 1px ${
+                        userData.badges[0]
+                          ? userData.badges[0].color
+                          : "transparent"
+                      }`,
+                    }}
+                  />
+                </div>
+                <div className="flex-col">
                   <h1 className="text-4xl font-semibold text-white">
                     {userData.name}
                   </h1>

@@ -60,7 +60,17 @@ export default async function handler(
       return;
     }
     // get twitch data for user
-    const twitchData = await getUserByName(redis, username);
+    let twitchData: { data: { [key: string]: any }[] };
+    try {
+      twitchData = await getUserByName(redis, username);
+    } catch (e) {
+      res
+        .status(500)
+        .json({
+          error: { message: "Twitch or internal API is down", code: 10100 },
+        });
+      return;
+    }
     // if data is empty, user does not exist
     if (twitchData.data.length === 0) {
       // temp who cares
