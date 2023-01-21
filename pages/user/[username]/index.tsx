@@ -1,4 +1,4 @@
-import { m } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
@@ -158,12 +158,18 @@ function UserPage() {
         />
       </Head>
       <div className="flex justify-center">
-        <div className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2">
+        <m.div
+          className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2"
+          variants={containerVariants}
+        >
           {/*  User "banner"  */}
-          <div className="col-span-10 mb-2 rounded-2xl bg-zinc-800 bg-opacity-70 p-3">
+          <m.div
+            className="col-span-10 mb-2 rounded-2xl bg-zinc-800 bg-opacity-70 p-3"
+            variants={userBannerVariants}
+          >
             <div className="flex items-center justify-between p-4">
               <div className="flex flex-row items-center">
-                <div className="relative bottom-[70px] w-[169px]">
+                <div className="relative bottom-[54px] -left-7 w-[110px] md:bottom-[70px] md:left-0 md:w-[169px]">
                   <Image
                     src={userData.avatar_url}
                     alt="User avatar"
@@ -184,8 +190,8 @@ function UserPage() {
                     }}
                   />
                 </div>
-                <div className="flex-col">
-                  <h1 className="text-4xl font-semibold text-white">
+                <div className="flex-col overflow-hidden overflow-ellipsis whitespace-nowrap">
+                  <h1 className="w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-2xl font-semibold text-white lg:text-4xl">
                     {userData.name}
                   </h1>
                   {/*  User's badges  */}
@@ -225,9 +231,12 @@ function UserPage() {
                 </h1>
               </div>
             </div>
-          </div>
+          </m.div>
           {/*  Main Container  */}
-          <div className="col-span-10 inline-grid grid-cols-7 gap-3 rounded-2xl lg:col-span-7">
+          <m.div
+            className="col-span-10 inline-grid grid-cols-7 gap-3 rounded-2xl lg:col-span-7"
+            variants={mainContainerVariants}
+          >
             {/*  User's Rank/Graph  */}
             <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70">
               <div className="flex flex-row items-center justify-between p-5">
@@ -352,10 +361,16 @@ function UserPage() {
                 )}
               </div>
             </div>
-          </div>
+          </m.div>
           {/*  Sidebar  */}
-          <div className="col-span-10 flex flex-col justify-start md:flex-row lg:col-span-3 lg:flex-col">
-            <div className="center mb-3 mr-3 inline-grid grid-cols-2 gap-3 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 text-xl font-medium lg:mr-0">
+          <m.div
+            className="col-span-10 flex flex-col justify-start md:flex-row lg:col-span-3 lg:flex-col"
+            variants={sidebarVariants}
+          >
+            <m.div
+              className="center mb-3 mr-3 inline-grid grid-cols-2 gap-3 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 text-xl font-medium lg:mr-0"
+              variants={sidebarItemVariants}
+            >
               {/*  User's Stats, left side is label, right side is value  */}
               <h1>Points</h1>
               <h1>{userData.points.toLocaleString("en-US")}</h1>
@@ -372,9 +387,12 @@ function UserPage() {
                   month: "short",
                 })}
               </h1>
-            </div>
+            </m.div>
             {/*  User's Favorite Emote  */}
-            <div className="flex flex-col rounded-2xl bg-zinc-800 bg-opacity-70">
+            <m.div
+              className="flex flex-col rounded-2xl bg-zinc-800 bg-opacity-70"
+              variants={sidebarItemVariants}
+            >
               <div className="h-11 w-full rounded-t-2xl bg-pink-400">
                 <h1 className="m-1 text-center text-2xl font-bold">
                   Favorite Emote
@@ -385,9 +403,9 @@ function UserPage() {
                   This user has not yet set a favorite emote.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
+            </m.div>
+          </m.div>
+        </m.div>
       </div>
     </>
   );
@@ -477,6 +495,93 @@ const TwitchLogo = () => {
       </g>
     </svg>
   );
+};
+
+const containerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+      delayChildren: 0.3,
+      staggerChildren: 0.25,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 20,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const userBannerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.75,
+      type: "spring",
+    },
+  },
+};
+
+const mainContainerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+    },
+  },
+};
+
+const sidebarVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+      delayChildren: 0.3,
+      staggerChildren: 0.25,
+    },
+  },
+};
+
+const sidebarItemVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+    },
+  },
 };
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
