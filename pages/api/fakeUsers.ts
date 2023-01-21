@@ -64,11 +64,9 @@ export default async function handler(
     try {
       twitchData = await getUserByName(redis, username);
     } catch (e) {
-      res
-        .status(500)
-        .json({
-          error: { message: "Twitch or internal API is down", code: 10100 },
-        });
+      res.status(500).json({
+        error: { message: "Twitch or internal API is down", code: 10100 },
+      });
       return;
     }
     // if data is empty, user does not exist
@@ -630,6 +628,30 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "plink",
         count: 32,
+        provider: "7tv",
+      },
+    ],
+  },
+  {
+    id: 18,
+    name: "Headdesking1",
+    points: 429,
+    daily_change: 0,
+    daily_change_percent: 0,
+    assets: [
+      {
+        name: "anyaPls",
+        count: 92,
+        provider: "7tv",
+      },
+      {
+        name: "toffeeDinkDonk",
+        count: 6,
+        provider: "7tv",
+      },
+      {
+        name: "SoCute",
+        count: 99,
         provider: "7tv",
       },
     ],
