@@ -1,4 +1,4 @@
-import RedisInstance from "ioredis";
+import type RedisInstance from "ioredis";
 
 async function applyCache(
   redis: RedisInstance,

@@ -89,7 +89,7 @@ function UserPage() {
         />
       </Head>
       <div className="flex justify-center">
-        <div className="mt-2 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pt-12 pl-2 font-plusJakarta lg:pl-0 lg:pr-2">
+        <div className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2">
           {/*  User "banner"  */}
           <div className="col-span-10 mb-2 rounded-2xl bg-zinc-800 bg-opacity-70 p-3">
             <div className="flex items-center justify-between p-4">
@@ -144,7 +144,7 @@ function UserPage() {
                   </div>
                 </div>
               </div>
-              <div>
+              <div className="hidden md:block">
                 <h1>
                   <span className="text-4xl font-semibold text-zinc-400">
                     $
@@ -157,12 +157,12 @@ function UserPage() {
             </div>
           </div>
           {/*  Main Container  */}
-          <div className="col-span-7 inline-grid grid-cols-7 gap-3 rounded-2xl">
+          <div className="col-span-10 inline-grid grid-cols-7 gap-3 rounded-2xl lg:col-span-7">
             {/*  User's Rank/Graph  */}
             <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70">
               <div className="flex flex-row items-center justify-between p-5">
-                <div className="flex-col">
-                  <h1 className="mb-1 text-center text-2xl font-medium text-white underline">
+                <div className="flex-col px-2">
+                  <h1 className="mb-1 whitespace-nowrap text-center text-xl font-medium text-white underline">
                     Global Rank
                   </h1>
                   <div className="flex items-center text-3xl font-bold">
@@ -172,13 +172,23 @@ function UserPage() {
                     </span>
                   </div>
                 </div>
-                <div>
+                <div className="hidden md:block">
                   <Image
                     src="/img/well_drawn_rank_chart.webp"
                     alt="Rank chart"
                     width={497}
                     height={100}
                   />
+                </div>
+                <div className="md:hidden">
+                  <h1>
+                    <span className="text-3xl font-semibold text-zinc-400 sm:text-4xl">
+                      $
+                    </span>
+                    <span className="text-3xl text-white sm:text-4xl">
+                      {userData.net_worth.toLocaleString("en-US")}
+                    </span>
+                  </h1>
                 </div>
               </div>
             </div>
@@ -191,7 +201,7 @@ function UserPage() {
                 </h1>
               </div>
               {/*  User's Assets Body  */}
-              <div className="inline-grid grid-cols-4 items-center justify-start p-5">
+              <div className="inline-grid grid-cols-2 items-center justify-start gap-2 p-5 sm:grid-cols-3 xl:grid-cols-4">
                 {errorCode === 20000 ? (
                   <h1 className=" text-zinc-400">{`Could not load assets`}</h1>
                 ) : (
@@ -202,60 +212,62 @@ function UserPage() {
                       provider: string;
                     }) => (
                       <div
-                        className="m-2 mb-0 flex h-44 w-40 flex-col items-center rounded-xl bg-zinc-900 bg-opacity-80 p-2"
+                        className="flex items-center justify-center"
                         key={asset.name}
                       >
-                        <div className="mt-2 mb-2 h-24 w-24">
-                          <div className="flex h-full w-full items-center justify-center p-2">
-                            {
-                              // if error code is 10000, show placeholder image
-                              errorCode === 10000 ? (
-                                <h1 className="text-center text-zinc-400">{`404 :(`}</h1>
-                              ) : (
-                                <Image
-                                  src={channelEmotes[asset.name]}
-                                  alt={asset.name}
-                                  width={100}
-                                  height={100}
-                                  className="max-h-[100px]"
-                                />
-                              )
-                            }
-                            {/*  Fix asset count to bottom right of image  */}
-                            <div className="relative rounded-full bg-zinc-900 bg-opacity-80 p-1">
-                              <p
-                                className="absolute -bottom-10 -right-2 -rotate-12 text-lg font-bold text-white"
-                                style={{ textShadow: "0px 0px 4px black" }}
-                              >
-                                x{asset.count}
-                              </p>
+                        <div className="flex h-44 w-full max-w-[256px] flex-col items-center rounded-xl bg-zinc-900 bg-opacity-80 p-2">
+                          <div className="mt-2 mb-2 h-24 w-24">
+                            <div className="flex h-full w-full items-center justify-center p-2">
+                              {
+                                // if error code is 10000, show placeholder image
+                                errorCode === 10000 ? (
+                                  <h1 className="text-center text-zinc-400">{`404 :(`}</h1>
+                                ) : (
+                                  <Image
+                                    src={channelEmotes[asset.name]}
+                                    alt={asset.name}
+                                    width={100}
+                                    height={100}
+                                    className="max-h-[100px]"
+                                  />
+                                )
+                              }
+                              {/*  Fix asset count to bottom right of image  */}
+                              <div className="relative rounded-full bg-zinc-900 bg-opacity-80 p-1">
+                                <p
+                                  className="absolute -bottom-10 -right-2 -rotate-12 text-lg font-bold text-white"
+                                  style={{ textShadow: "0px 0px 4px black" }}
+                                >
+                                  x{asset.count}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex w-full flex-row items-center justify-center">
-                          {
-                            // show provider logo (7tv, bttv, ffz, twitch)
-                            asset.provider === "7tv" ? (
-                              <div className="mr-1 pt-[1px] text-7tv ">
-                                <SevenTVLogo />
-                              </div>
-                            ) : asset.provider === "bttv" ? (
-                              <div className="mr-1 pt-[1px] text-bttv">
-                                <BTTVLogo />
-                              </div>
-                            ) : asset.provider === "ffz" ? (
-                              <div className="h-5 w-6 text-white">
-                                <FFZLogo />
-                              </div>
-                            ) : (
-                              <div className="mr-1 w-4 pt-[1px] text-ttv">
-                                <TwitchLogo />
-                              </div>
-                            )
-                          }
-                          <p className="text-md max-w-[80%] overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-white">
-                            {asset.name}
-                          </p>
+                          <div className="flex w-full flex-row items-center justify-center">
+                            {
+                              // show provider logo (7tv, bttv, ffz, twitch)
+                              asset.provider === "7tv" ? (
+                                <div className="mr-1 pt-[1px] text-7tv ">
+                                  <SevenTVLogo />
+                                </div>
+                              ) : asset.provider === "bttv" ? (
+                                <div className="mr-1 pt-[1px] text-bttv">
+                                  <BTTVLogo />
+                                </div>
+                              ) : asset.provider === "ffz" ? (
+                                <div className="h-5 w-6 text-white">
+                                  <FFZLogo />
+                                </div>
+                              ) : (
+                                <div className="mr-1 w-4 pt-[1px] text-ttv">
+                                  <TwitchLogo />
+                                </div>
+                              )
+                            }
+                            <p className="text-md max-w-[80%] overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-white">
+                              {asset.name}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     )
@@ -265,8 +277,8 @@ function UserPage() {
             </div>
           </div>
           {/*  Sidebar  */}
-          <div className="col-span-3 flex flex-col">
-            <div className="center mb-3 inline-grid grid-cols-2 gap-3 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 text-xl font-medium">
+          <div className="col-span-10 flex flex-col justify-start md:flex-row lg:col-span-3 lg:flex-col">
+            <div className="center mb-3 mr-3 inline-grid grid-cols-2 gap-3 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 text-xl font-medium lg:mr-0">
               {/*  User's Stats, left side is label, right side is value  */}
               <h1>Points</h1>
               <h1>{userData.points.toLocaleString("en-US")}</h1>
