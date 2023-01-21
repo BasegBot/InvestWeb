@@ -8,7 +8,6 @@ import {
 import Head from "next/head";
 import { useRouter } from "next/router";
 import NavBar from "../components/dashboard/NavBar";
-import { NavTemplate } from "./NavTemplates";
 
 interface DashLayoutProps {
   children: React.ReactNode;
@@ -26,6 +25,7 @@ function DashLayout(props: DashLayoutProps) {
       variants={containerVariants}
     >
       <Head>
+        <meta name="viewport" content="initial-scale=0.8" />
         <title>Dashboard - toffee</title>
         <meta name="description" content="Dashboard statistics for toffee" />
         <link rel="icon" href="/favicon.ico" />

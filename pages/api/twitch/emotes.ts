@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createRedisInstance } from "../../../misc/redis";
-import { getChannelEmotes, getGlobalEmotes } from "../../../misc/7TVAPI";
+import { getChannelEmotes, getGlobalEmotes } from "../../../misc/TwitchAPI";
 
 type Data = {
   [key: string]: any;
@@ -14,15 +14,17 @@ export default async function handler(
 
   try {
     const channel = req.query.c
-      ? await getChannelEmotes(redis, req.query.c as string)
+      ? (await getChannelEmotes(redis, req.query.c as string)).data
       : undefined;
-    const global = await getGlobalEmotes(redis);
+    const global = (await getGlobalEmotes(redis)).data;
     redis.quit();
     res.status(200).json({ channel, global });
   } catch (e) {
     console.log(e);
     res
       .status(500)
-      .json({ error: { message: "7TV or internal API is down", code: 10000 } });
+      .json({
+        error: { message: "Twitch or internal API is down", code: 10100 },
+      });
   }
 }

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createRedisInstance } from "../../../misc/redis";
-import { getChannelEmotes, getGlobalEmotes } from "../../../misc/7TVAPI";
+import { getUserByID, getGlobalEmotes } from "../../../misc/BTTVAPI";
 
 type Data = {
   [key: string]: any;
@@ -14,7 +14,7 @@ export default async function handler(
 
   try {
     const channel = req.query.c
-      ? await getChannelEmotes(redis, req.query.c as string)
+      ? (await getUserByID(redis, req.query.c as string)).channelEmotes
       : undefined;
     const global = await getGlobalEmotes(redis);
     redis.quit();
@@ -23,6 +23,8 @@ export default async function handler(
     console.log(e);
     res
       .status(500)
-      .json({ error: { message: "7TV or internal API is down", code: 10000 } });
+      .json({
+        error: { message: "BTTV or internal API is down", code: 10200 },
+      });
   }
 }
