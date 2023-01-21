@@ -175,15 +175,25 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annykiss",
         count: 8,
-        provider: "ttv",
+        provider: "7tv",
       },
       {
         name: "HUH",
         count: 1,
+        provider: "7tv",
+      },
+      {
+        name: "annytfSigh",
+        count: 1,
+        provider: "ttv",
+      },
+      {
+        name: "GabeN",
+        count: 3,
         provider: "bttv",
       },
       {
-        name: "widepeepoMASTURBATION77769420GANGSHITNOMOREFORTNITE19DOLLERFORTNITECARD",
+        name: "widepeepoBlanket",
         count: 1,
         provider: "ffz",
       },
@@ -212,6 +222,21 @@ const fakeData: fakeDataEntry[] = [
         count: 727,
         provider: "7tv",
       },
+      {
+        name: "AnnySilly",
+        count: 4,
+        provider: "bttv",
+      },
+      {
+        name: "annytfHeart",
+        count: 98,
+        provider: "ttv",
+      },
+      {
+        name: "Catge",
+        count: 4,
+        provider: "ffz",
+      },
     ],
     badges: [adminBadge, botDevBadge],
   },
@@ -233,9 +258,24 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "KissaVei",
+        count: 1,
+        provider: "bttv",
+      },
+      {
         name: "SNIFFA",
         count: 1219,
         provider: "7tv",
+      },
+      {
+        name: "FeelsBirthdayMan",
+        count: 1,
+        provider: "ffz",
+      },
+      {
+        name: "annytfRave",
+        count: 5,
+        provider: "ttv",
       },
     ],
     badges: [adminBadge, botDevBadge],
@@ -253,6 +293,11 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "GabeN",
+        count: 3,
+        provider: "bttv",
+      },
+      {
         name: "ThisStream",
         count: 210,
         provider: "7tv",
@@ -261,6 +306,11 @@ const fakeData: fakeDataEntry[] = [
         name: "BAND",
         count: 91,
         provider: "7tv",
+      },
+      {
+        name: "annytfMelt",
+        count: 16,
+        provider: "ttv",
       },
     ],
     badges: [CEOBadge, adminBadge],
@@ -278,9 +328,9 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
-        name: "golive",
-        count: 90,
-        provider: "7tv",
+        name: "annyHop",
+        count: 61,
+        provider: "bttv",
       },
       {
         name: "annyExcitedHug",
@@ -291,6 +341,16 @@ const fakeData: fakeDataEntry[] = [
         name: "AAAA",
         count: 65,
         provider: "7tv",
+      },
+      {
+        name: "peepoWTF",
+        count: 60,
+        provider: "ffz",
+      },
+      {
+        name: "annytfAngy",
+        count: 90,
+        provider: "ttv",
       },
     ],
     badges: [adminBadge, botDevBadge],
@@ -332,6 +392,11 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "annySaur",
+        count: 7,
+        provider: "bttv",
+      },
+      {
         name: "BAND",
         count: 49,
         provider: "7tv",
@@ -340,6 +405,16 @@ const fakeData: fakeDataEntry[] = [
         name: "SNIFFA",
         count: 78,
         provider: "7tv",
+      },
+      {
+        name: "PepegaPhone",
+        count: 142,
+        provider: "ffz",
+      },
+      {
+        name: "annytfHug",
+        count: 19,
+        provider: "ttv",
       },
     ],
   },
@@ -356,9 +431,9 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
-        name: "peepoTalk",
-        count: 73,
-        provider: "7tv",
+        name: "annytfLUL",
+        count: 9,
+        provider: "ttv",
       },
       {
         name: "peepoSnow",
@@ -371,9 +446,14 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
-        name: "xdd666",
-        count: 53,
-        provider: "7tv",
+        name: "annyBlankies",
+        count: 88,
+        provider: "bttv",
+      },
+      {
+        name: "TWINGO",
+        count: 98,
+        provider: "ffz",
       },
     ],
   },
@@ -395,9 +475,19 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "annytfBanana",
+        count: 15,
+        provider: "bttv",
+      },
+      {
         name: "ewLeague",
         count: 64,
         provider: "7tv",
+      },
+      {
+        name: "annytfPain",
+        count: 37,
+        provider: "ttv",
       },
     ],
   },
@@ -419,6 +509,11 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "GabeN",
+        count: 52,
+        provider: "bttv",
+      },
+      {
         name: "GroupWankge",
         count: 38,
         provider: "7tv",
@@ -427,6 +522,11 @@ const fakeData: fakeDataEntry[] = [
         name: "annyCucumber",
         count: 90,
         provider: "7tv",
+      },
+      {
+        name: "annytfKnuckles",
+        count: 2,
+        provider: "ttv",
       },
     ],
   },
@@ -448,9 +548,24 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "annyPls",
+        count: 5,
+        provider: "bttv",
+      },
+      {
         name: "golive",
         count: 46,
         provider: "7tv",
+      },
+      {
+        name: "COPIUM",
+        count: 82,
+        provider: "ffz",
+      },
+      {
+        name: "annytfCheer",
+        count: 54,
+        provider: "ttv",
       },
     ],
   },
@@ -481,6 +596,16 @@ const fakeData: fakeDataEntry[] = [
         count: 13,
         provider: "7tv",
       },
+      {
+        name: "annytfBlink",
+        count: 10,
+        provider: "bttv",
+      },
+      {
+        name: "annytfBonk",
+        count: 77,
+        provider: "ttv",
+      },
     ],
   },
   {
@@ -501,6 +626,16 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "annyHop",
+        count: 16,
+        provider: "bttv",
+      },
+      {
+        name: "AndKnuckles",
+        count: 17,
+        provider: "ffz",
+      },
+      {
         name: "yoshiJAM",
         count: 67,
         provider: "7tv",
@@ -509,6 +644,11 @@ const fakeData: fakeDataEntry[] = [
         name: "WhoAsked",
         count: 59,
         provider: "7tv",
+      },
+      {
+        name: "annytfSit",
+        count: 53,
+        provider: "ttv",
       },
     ],
   },
@@ -528,6 +668,11 @@ const fakeData: fakeDataEntry[] = [
         name: "Madgeclap",
         count: 82,
         provider: "7tv",
+      },
+      {
+        name: "annyDFast",
+        count: 22,
+        provider: "bttv",
       },
       {
         name: "PeepoKittyHug",
@@ -554,9 +699,19 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "annyBlankies",
+        count: 74,
+        provider: "bttv",
+      },
+      {
         name: "anyatf",
         count: 24,
         provider: "7tv",
+      },
+      {
+        name: "annytfGamba",
+        count: 32,
+        provider: "ttv",
       },
     ],
   },
@@ -578,9 +733,19 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
       {
+        name: "Annie",
+        count: 24,
+        provider: "bttv",
+      },
+      {
         name: "Lagging",
         count: 92,
         provider: "7tv",
+      },
+      {
+        name: "annytfFlower",
+        count: 33,
+        provider: "ttv",
       },
     ],
   },
@@ -606,6 +771,16 @@ const fakeData: fakeDataEntry[] = [
         count: 7,
         provider: "7tv",
       },
+      {
+        name: "annyHopper",
+        count: 24,
+        provider: "bttv",
+      },
+      {
+        name: "annytfFlower",
+        count: 79,
+        provider: "ttv",
+      },
     ],
   },
   {
@@ -630,6 +805,16 @@ const fakeData: fakeDataEntry[] = [
         count: 32,
         provider: "7tv",
       },
+      {
+        name: "AngelThump",
+        count: 41,
+        provider: "bttv",
+      },
+      {
+        name: "annytfSad",
+        count: 2,
+        provider: "ttv",
+      },
     ],
   },
   {
@@ -653,6 +838,16 @@ const fakeData: fakeDataEntry[] = [
         name: "SoCute",
         count: 99,
         provider: "7tv",
+      },
+      {
+        name: "annyBlankies",
+        count: 42,
+        provider: "bttv",
+      },
+      {
+        name: "annytfHeart",
+        count: 63,
+        provider: "ttv",
       },
     ],
   },

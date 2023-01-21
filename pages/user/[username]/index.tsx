@@ -9,9 +9,9 @@ import Loading from "../../../components/common/Loading";
 // TODO: Animations
 
 function UserPage() {
-  const [channelEmotes, setChannelEmotes] = useState<{ [key: string]: string }>(
-    {}
-  );
+  const [channelEmotes, setChannelEmotes] = useState<{
+    [key: string]: { [key: string]: string };
+  }>({});
   const [userData, setUserData] = useState<{ [key: string]: any }>({});
   const [errorCode, setErrorCode] = useState<number | null>(null);
   const router = useRouter();
@@ -36,7 +36,74 @@ function UserPage() {
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
           emotes[emote.data.name] = `https:${base_url}/${largest.name}`;
         });
-        setChannelEmotes(emotes);
+        // same for global emotes
+        data.global.namedEmoteSet.emotes.forEach((emote: any) => {
+          let base_url = emote.data.host.url;
+          let largest = emote.data.host.files[emote.data.host.files.length - 1];
+          emotes[emote.data.name] = `https:${base_url}/${largest.name}`;
+        });
+        // set 7tv key to channelEmotes
+        setChannelEmotes((prev) => ({ ...prev, "7tv": emotes }));
+      });
+    fetch("/api/bttv/emotes?c=56418014")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setErrorCode(data.error.code);
+          return;
+        }
+        let emotes: { [key: string]: string } = {};
+        data.channel.forEach((emote: any) => {
+          emotes[emote.code] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+        });
+        data.global.forEach((emote: any) => {
+          emotes[emote.code] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+        });
+        // add as bttv key to channelEmotes
+        setChannelEmotes((prev) => ({ ...prev, bttv: emotes }));
+      });
+    fetch("/api/ffz/emotes?s=341402")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setErrorCode(data.error.code);
+          return;
+        }
+        let emotes: { [key: string]: string } = {};
+        data.channel.forEach((emote: any) => {
+          // ffz emotes don't have all sizes available, so we need to get the largest one by taking the largest key in the urls object
+          emotes[emote.name] = `https:${
+            emote.urls[
+              Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
+            ]
+          }`;
+        });
+        data.global.forEach((emote: any) => {
+          emotes[emote.name] = `https:${
+            emote.urls[
+              Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
+            ]
+          }`;
+        });
+        // add as ffz key to channelEmotes
+        setChannelEmotes((prev) => ({ ...prev, ffz: emotes }));
+      });
+    fetch("/api/twitch/emotes?c=56418014")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setErrorCode(data.error.code);
+          return;
+        }
+        let emotes: { [key: string]: string } = {};
+        data.channel.forEach((emote: any) => {
+          emotes[emote.name] = emote.images["url_4x"];
+        });
+        data.global.forEach((emote: any) => {
+          emotes[emote.name] = emote.images["url_4x"];
+        });
+        // add as twitch key to channelEmotes
+        setChannelEmotes((prev) => ({ ...prev, ttv: emotes }));
       });
     fetch(`/api/fakeUsers?u=${username}`)
       .then((res) => res.json())
@@ -53,6 +120,8 @@ function UserPage() {
     // 20000 = user not found
     // 10000 = 7tv api error
     // 10100 = Twitch api error
+    // 10200 = BTTV api error
+    // 10300 = FFZ api error
     const errorMsg = errorCode === 20000 ? "User not found" : "API error";
     return (
       <m.div
@@ -66,9 +135,9 @@ function UserPage() {
     );
   }
 
-  // if json is empty
+  // if json is empty, and if channelEmotes is incomplete, show loading screen
   if (
-    Object.keys(channelEmotes).length === 0 ||
+    Object.keys(channelEmotes).length < 4 ||
     !userData ||
     Object.keys(userData).length === 0
   ) {
@@ -78,7 +147,7 @@ function UserPage() {
       </div>
     );
   }
-
+  console.log(channelEmotes);
   return (
     <>
       <Head>
@@ -100,6 +169,7 @@ function UserPage() {
                     alt="User avatar"
                     width={140}
                     height={140}
+                    priority
                     className="absolute rounded-lg border-4"
                     style={{
                       borderColor: userData.badges[0]
@@ -217,14 +287,21 @@ function UserPage() {
                       >
                         <div className="flex h-44 w-full max-w-[256px] flex-col items-center rounded-xl bg-zinc-900 bg-opacity-80 p-2">
                           <div className="mt-2 mb-2 h-24 w-24">
-                            <div className="flex h-full w-full items-center justify-center p-2">
+                            <div className="flex h-full w-full items-center justify-start p-2">
                               {
-                                // if error code is 10000, show placeholder image
-                                errorCode === 10000 ? (
+                                // if error code is 10000 or emote does not exist, show placeholder image
+                                errorCode === 10000 ||
+                                channelEmotes[asset.provider] === undefined ||
+                                channelEmotes[asset.provider][asset.name] ===
+                                  undefined ? (
                                   <h1 className="text-center text-zinc-400">{`404 :(`}</h1>
                                 ) : (
                                   <Image
-                                    src={channelEmotes[asset.name]}
+                                    src={
+                                      channelEmotes[asset.provider][
+                                        asset.name
+                                      ] ?? ""
+                                    }
                                     alt={asset.name}
                                     width={100}
                                     height={100}
@@ -245,7 +322,7 @@ function UserPage() {
                           </div>
                           <div className="flex w-full flex-row items-center justify-center">
                             {
-                              // show provider logo (7tv, bttv, ffz, twitch)
+                              // show provider logo (7tv, bttv, ffz, ttv)
                               asset.provider === "7tv" ? (
                                 <div className="mr-1 pt-[1px] text-7tv ">
                                   <SevenTVLogo />
