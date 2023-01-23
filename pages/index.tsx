@@ -6,12 +6,11 @@ import Image from "next/image";
 import Head from "next/head";
 
 function Home() {
-  let api7tvEmotes = `/api/7tv/emotes?c=61ad997effa9aba101bcfddf`;
   const [emotesUrls, setEmotes] = useState([]);
   const [currentEmote, setCurrentEmote] = useState(0);
 
   useEffect(() => {
-    fetch(api7tvEmotes)
+    fetch("/api/emotes")
       .then((res) => res.json())
       .then((data) => {
         // if error, return
@@ -19,19 +18,16 @@ function Home() {
           return;
         }
         // get all emote URLs
-        let emoteUrls = data.channel.user.emote_sets[0].emotes.map(
-          (emote: any) => {
-            let base_url = emote.data.host.url;
-            // get the largest emote size, append it to the base url
-            let largest =
-              emote.data.host.files[emote.data.host.files.length - 1];
-            // if width != height, skip it
-            if (largest.width !== largest.height) {
-              return null;
-            }
-            return `https:${base_url}/${largest.name}`;
+        let emoteUrls = data["7tv"].channel.map((emote: any) => {
+          let base_url = emote.data.host.url;
+          // get the largest emote size, append it to the base url
+          let largest = emote.data.host.files[emote.data.host.files.length - 1];
+          // if width != height, skip it
+          if (largest.width !== largest.height) {
+            return null;
           }
-        );
+          return `https:${base_url}/${largest.name}`;
+        });
 
         // remove null values
 

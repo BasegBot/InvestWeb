@@ -6,7 +6,13 @@ import DashLayout from "../../../layouts/DashLayout";
 import Image from "next/image";
 import Loading from "../../../components/common/Loading";
 
-// TODO: Animations
+interface EmoteURLs {
+  "7tv": { [key: string]: string };
+  bttv: { [key: string]: string };
+  ffz: { [key: string]: string };
+  twitch: { [key: string]: string };
+  [key: string]: { [key: string]: string };
+}
 
 function UserPage() {
   const [channelEmotes, setChannelEmotes] = useState<{
@@ -20,7 +26,7 @@ function UserPage() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    fetch("/api/7tv/emotes?c=61ad997effa9aba101bcfddf")
+    fetch("/api/emotes")
       .then((res) => res.json())
       .then((data) => {
         // if error, return
@@ -28,83 +34,59 @@ function UserPage() {
           setErrorCode(data.error.code);
           return;
         }
-        // construct js object with emote names as keys and emote urls as values
-        let emotes: { [key: string]: string } = {};
-        data.channel.user.emote_sets[0].emotes.forEach((emote: any) => {
+        // construct js object with emote names as keys and emote urls for each provider
+        // 7tv
+        let emotes: EmoteURLs = { "7tv": {}, bttv: {}, ffz: {}, twitch: {} };
+        data["7tv"].channel.forEach((emote: any) => {
           let base_url = emote.data.host.url;
           // get the largest emote size, append it to the base url
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
-          emotes[emote.data.name] = `https:${base_url}/${largest.name}`;
+          emotes["7tv"][emote.data.name] = `https:${base_url}/${largest.name}`;
         });
         // same for global emotes
-        data.global.namedEmoteSet.emotes.forEach((emote: any) => {
+        data["7tv"].global.forEach((emote: any) => {
           let base_url = emote.data.host.url;
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
-          emotes[emote.data.name] = `https:${base_url}/${largest.name}`;
+          emotes["7tv"][emote.data.name] = `https:${base_url}/${largest.name}`;
         });
-        // set 7tv key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, "7tv": emotes }));
-      });
-    fetch("/api/bttv/emotes?c=56418014")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-          return;
-        }
-        let emotes: { [key: string]: string } = {};
-        data.channel.forEach((emote: any) => {
-          emotes[emote.code] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+        // bttv
+        data["bttv"].channel.forEach((emote: any) => {
+          emotes["bttv"][
+            emote.code
+          ] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
         });
-        data.global.forEach((emote: any) => {
-          emotes[emote.code] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+        data["bttv"].global.forEach((emote: any) => {
+          emotes["bttv"][
+            emote.code
+          ] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
         });
-        // add as bttv key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, bttv: emotes }));
-      });
-    fetch("/api/ffz/emotes?s=341402")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-          return;
-        }
-        let emotes: { [key: string]: string } = {};
-        data.channel.forEach((emote: any) => {
+        // ffz
+        data["ffz"].channel.forEach((emote: any) => {
           // ffz emotes don't have all sizes available, so we need to get the largest one by taking the largest key in the urls object
-          emotes[emote.name] = `https:${
+          emotes["ffz"][emote.name] = `https:${
             emote.urls[
               Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
             ]
           }`;
         });
-        data.global.forEach((emote: any) => {
-          emotes[emote.name] = `https:${
+        data["ffz"].global.forEach((emote: any) => {
+          emotes["ffz"][emote.name] = `https:${
             emote.urls[
               Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
             ]
           }`;
         });
-        // add as ffz key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, ffz: emotes }));
-      });
-    fetch("/api/twitch/emotes?c=56418014")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-          return;
-        }
-        let emotes: { [key: string]: string } = {};
-        data.channel.forEach((emote: any) => {
-          emotes[emote.name] = emote.images["url_4x"];
+        // twitch
+        data["twitch"].channel.forEach((emote: any) => {
+          emotes["twitch"][emote.name] = emote.images["url_4x"];
         });
-        data.global.forEach((emote: any) => {
-          emotes[emote.name] = emote.images["url_4x"];
+        data["twitch"].global.forEach((emote: any) => {
+          emotes["twitch"][emote.name] = emote.images["url_4x"];
         });
-        // add as twitch key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, ttv: emotes }));
+        // set emotes to channelEmotes
+        setChannelEmotes(emotes);
       });
+    // fetch user data
     fetch(`/api/fakeUsers?u=${username}`)
       .then((res) => res.json())
       .then((data) => {
@@ -118,10 +100,8 @@ function UserPage() {
 
   if (errorCode !== null) {
     // 20000 = user not found
-    // 10000 = 7tv api error
-    // 10100 = Twitch api error
-    // 10200 = BTTV api error
-    // 10300 = FFZ api error
+    // 10000 = emote api error
+    // 10100 = twitch api error
     const errorMsg = errorCode === 20000 ? "User not found" : "API error";
     return (
       <m.div
@@ -331,7 +311,7 @@ function UserPage() {
                           </div>
                           <div className="flex w-full flex-row items-center justify-center">
                             {
-                              // show provider logo (7tv, bttv, ffz, ttv)
+                              // show provider logo (7tv, bttv, ffz, twitch)
                               asset.provider === "7tv" ? (
                                 <div className="mr-1 pt-[1px] text-7tv ">
                                   <SevenTVLogo />
@@ -345,7 +325,7 @@ function UserPage() {
                                   <FFZLogo />
                                 </div>
                               ) : (
-                                <div className="mr-1 w-4 pt-[1px] text-ttv">
+                                <div className="mr-1 w-4 pt-[1px] text-twitch">
                                   <TwitchLogo />
                                 </div>
                               )

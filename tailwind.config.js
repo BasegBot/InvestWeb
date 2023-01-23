@@ -16,7 +16,7 @@ module.exports = {
       colors: {
         "7tv": "#4fc2bc",
         bttv: "#d50014",
-        ttv: "#9146FF",
+        twitch: "#9146FF",
       },
     },
   },
