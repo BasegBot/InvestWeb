@@ -11,6 +11,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const redis = createRedisInstance();
+  if (!redis) {
+    res.status(500).json({
+      error: { message: "Internal API is down", code: 50100 },
+    });
+    return;
+  }
 
   try {
     const channel = req.query.c
@@ -21,10 +27,8 @@ export default async function handler(
     res.status(200).json({ channel, global });
   } catch (e) {
     console.log(e);
-    res
-      .status(500)
-      .json({
-        error: { message: "Twitch or internal API is down", code: 10100 },
-      });
+    res.status(500).json({
+      error: { message: "Twitch or internal API is down", code: 10100 },
+    });
   }
 }

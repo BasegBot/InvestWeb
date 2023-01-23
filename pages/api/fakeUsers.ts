@@ -16,6 +16,12 @@ export default async function handler(
   const sortAsc = req.query.a ? (req.query.a as string) : undefined;
 
   const redis = createRedisInstance();
+  if (!redis) {
+    res.status(500).json({
+      error: { message: "Internal API is down", code: 50100 },
+    });
+    return;
+  }
 
   let data = fakeData;
   // calculate all net worths

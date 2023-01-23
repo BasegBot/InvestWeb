@@ -11,6 +11,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const redis = createRedisInstance();
+  if (!redis) {
+    res.status(500).json({
+      error: { message: "Internal API is down", code: 50300 },
+    });
+    return;
+  }
 
   try {
     const channel = req.query.s
