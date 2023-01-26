@@ -551,10 +551,18 @@ const sidebarItemVariants: Variants = {
   },
 };
 
-UserPage.getInitialProps = async (context: { query: { username: string } }) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_URL}/api/fakeUsers?u=${context.query.username}`
-  );
+UserPage.getInitialProps = async (context: {
+  query: { username: string };
+  req: any;
+}) => {
+  let host = process.env.NEXT_PUBLIC_URL;
+  console.log(host);
+  if (context.req) {
+    // if env breaks ???
+    let host = context.req.headers.host;
+  }
+  const url = new URL(`${host}/api/fakeUsers?u=${context.query.username}`);
+  const res = await fetch(url);
   let user = await res.json();
   if (user.error) {
     user = { data: user };
