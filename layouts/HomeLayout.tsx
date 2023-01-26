@@ -15,6 +15,18 @@ import { NavTemplate } from "./NavTemplates";
 interface HomeLayoutProps {
   navOptions: NavTemplate[];
   children: React.ReactNode;
+  metaTags: {
+    title?: string;
+    ogTitle?: string;
+    description?: string;
+    ogDescription?: string;
+    content?: string;
+    imageUrl?: string;
+    themeColor?: string;
+    misc?: {
+      [key: string]: string;
+    };
+  };
 }
 
 function HomeLayout(props: HomeLayoutProps) {
@@ -22,6 +34,7 @@ function HomeLayout(props: HomeLayoutProps) {
   const navOptions = props.navOptions;
   // get the current route for animation purposes
   const router = useRouter();
+  const title = props.metaTags.title ?? "Dashboard - toffee";
   return (
     <m.div
       initial="initial"
@@ -30,18 +43,49 @@ function HomeLayout(props: HomeLayoutProps) {
       variants={containerVariants}
     >
       <Head>
-        <title>toffee</title>
-        <meta name="description" content="Serving anny's community est. 2022" />
+        <title>{title}</title>
+        <meta
+          name="description"
+          content={
+            props.metaTags.description ?? "Serving anny's community est. 2022"
+          }
+        />
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#c084fc" />
-        <meta property="og:title" content="toffee" />
+        <meta
+          name="theme-color"
+          content={props.metaTags.themeColor ?? "#c084fc"}
+        />
+        <meta
+          property="og:title"
+          content={props.metaTags.ogTitle ?? props.metaTags.title ?? "toffee"}
+        />
         <meta
           property="og:description"
-          content="Serving anny's community est. 2022"
+          content={
+            props.metaTags.ogDescription ??
+            props.metaTags.description ??
+            "Serving anny's community est. 2022"
+          }
         />
-        <meta property="og:image" content="/img/logo.webp" />
-        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content={props.metaTags.imageUrl ?? "/img/logo.webp"}
+        />
+        <meta
+          property="og:type"
+          content={props.metaTags.content ?? "website"}
+        />
         <meta property="og:site_name" content="toffee" />
+        {props.metaTags.misc &&
+          Object.keys(props.metaTags.misc).map((key) => {
+            return (
+              <meta
+                key={key}
+                property={key}
+                content={props.metaTags.misc ? props.metaTags.misc[key] : ""}
+              />
+            );
+          })}
       </Head>
 
       <LazyMotion features={domAnimation}>

@@ -1,5 +1,4 @@
 import { m, Variants } from "framer-motion";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 import DashLayout from "../../../layouts/DashLayout";
@@ -14,18 +13,23 @@ interface EmoteURLs {
   [key: string]: { [key: string]: string };
 }
 
-function UserPage() {
+interface UserPageProps {
+  userData: { [key: string]: any };
+}
+
+function UserPage(props: UserPageProps) {
   const [channelEmotes, setChannelEmotes] = useState<{
     [key: string]: { [key: string]: string };
   }>({});
-  const [userData, setUserData] = useState<{ [key: string]: any }>({});
   const [errorCode, setErrorCode] = useState<number | null>(null);
   const router = useRouter();
   const { username } = router.query;
-  const title = username ? `${username} - toffee` : "toffee";
 
   useEffect(() => {
     if (!router.isReady) return;
+    if (props.userData.error) {
+      setErrorCode(props.userData.error.code);
+    }
     fetch("/api/emotes")
       .then((res) => res.json())
       .then((data) => {
@@ -86,15 +90,6 @@ function UserPage() {
         // set emotes to channelEmotes
         setChannelEmotes(emotes);
       });
-    // fetch user data
-    fetch(`/api/fakeUsers?u=${username}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-        }
-        setUserData(data.data);
-      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
@@ -116,27 +111,16 @@ function UserPage() {
   }
 
   // if json is empty, and if channelEmotes is incomplete, show loading screen
-  if (
-    Object.keys(channelEmotes).length < 4 ||
-    !userData ||
-    Object.keys(userData).length === 0
-  ) {
+  if (Object.keys(channelEmotes).length < 4) {
     return (
       <div className="flex h-screen w-full items-center justify-center text-3xl">
         <Loading />
       </div>
     );
   }
-  console.log(channelEmotes);
+
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta
-          name="description"
-          content={`${username}'s portfolio on toffee`}
-        />
-      </Head>
       <div className="flex justify-center">
         <m.div
           className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2"
@@ -151,20 +135,20 @@ function UserPage() {
               <div className="flex flex-row items-center">
                 <div className="relative bottom-[54px] -left-7 w-[110px] md:bottom-[70px] md:left-0 md:w-[169px]">
                   <Image
-                    src={userData.avatar_url}
+                    src={props.userData.avatar_url}
                     alt="User avatar"
                     width={140}
                     height={140}
                     priority
                     className="absolute rounded-lg border-4"
                     style={{
-                      borderColor: userData.badges[0]
-                        ? userData.badges[0].color
+                      borderColor: props.userData.badges[0]
+                        ? props.userData.badges[0].color
                         : "grey",
                       // "glow" effect
                       boxShadow: `0px 0px 20px 1px ${
-                        userData.badges[0]
-                          ? userData.badges[0].color
+                        props.userData.badges[0]
+                          ? props.userData.badges[0].color
                           : "transparent"
                       }`,
                     }}
@@ -172,12 +156,12 @@ function UserPage() {
                 </div>
                 <div className="flex-col overflow-hidden overflow-ellipsis whitespace-nowrap">
                   <h1 className="w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-2xl font-semibold text-white lg:text-4xl">
-                    {userData.name}
+                    {props.userData.name}
                   </h1>
                   {/*  User's badges  */}
                   <div className="mt-1 flex flex-row text-sm">
-                    {userData.badges ? (
-                      userData.badges.map(
+                    {props.userData.badges ? (
+                      props.userData.badges.map(
                         (badge: {
                           name: string;
                           color: string;
@@ -206,7 +190,7 @@ function UserPage() {
                     $
                   </span>
                   <span className="text-4xl text-white">
-                    {userData.net_worth.toLocaleString("en-US")}
+                    {props.userData.net_worth.toLocaleString("en-US")}
                   </span>
                 </h1>
               </div>
@@ -227,7 +211,7 @@ function UserPage() {
                   <div className="flex items-center text-3xl font-bold">
                     <span className="text-zinc-400">#</span>
                     <span className="text-white">
-                      {userData.rank.toLocaleString("en-US")}
+                      {props.userData.rank.toLocaleString("en-US")}
                     </span>
                   </div>
                 </div>
@@ -245,7 +229,7 @@ function UserPage() {
                       $
                     </span>
                     <span className="text-3xl text-white sm:text-4xl">
-                      {userData.net_worth.toLocaleString("en-US")}
+                      {props.userData.net_worth.toLocaleString("en-US")}
                     </span>
                   </h1>
                 </div>
@@ -264,7 +248,7 @@ function UserPage() {
                 {errorCode === 20000 ? (
                   <h1 className=" text-zinc-400">{`Could not load assets`}</h1>
                 ) : (
-                  userData.assets.map(
+                  props.userData.assets.map(
                     (asset: {
                       name: string;
                       count: number;
@@ -353,19 +337,22 @@ function UserPage() {
             >
               {/*  User's Stats, left side is label, right side is value  */}
               <h1>Points</h1>
-              <h1>{userData.points.toLocaleString("en-US")}</h1>
+              <h1>{props.userData.points.toLocaleString("en-US")}</h1>
               <h1>Shares</h1>
-              <h1>{userData.shares.toLocaleString("en-US")}</h1>
+              <h1>{props.userData.shares.toLocaleString("en-US")}</h1>
               <h1>Trades</h1>
-              <h1>{(userData.trades ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(props.userData.trades ?? 0).toLocaleString("en-US")}</h1>
               <h1>Peak rank</h1>
-              <h1>{(userData.peak_rank ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(props.userData.peak_rank ?? 0).toLocaleString("en-US")}</h1>
               <h1>Joined</h1>
               <h1>
-                {new Date(userData.joined ?? 0).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                })}
+                {new Date(props.userData.joined ?? 0).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "short",
+                  }
+                )}
               </h1>
             </m.div>
             {/*  User's Favorite Emote  */}
@@ -564,8 +551,32 @@ const sidebarItemVariants: Variants = {
   },
 };
 
+UserPage.getInitialProps = async (context: { query: { username: string } }) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_URL}/api/fakeUsers?u=${context.query.username}`
+  );
+  let user = await res.json();
+  if (user.error) {
+    user = { data: user };
+  }
+  return { userData: user.data };
+};
+
 UserPage.getLayout = function getLayout(page: ReactElement) {
-  return <DashLayout>{page}</DashLayout>;
+  const { userData } = page.props;
+  const metaTags = {
+    title: !userData.error
+      ? `${userData.name ?? "User 404"} - toffee`
+      : "User 404 - toffee",
+    description: !userData.error
+      ? `${userData.name}'s portfolio on toffee`
+      : "Couldn't find that user on toffee... :(",
+    image: !userData.error ? userData.avatar_url : undefined,
+    misc: {
+      "twitter:card": "summary",
+    },
+  };
+  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
 };
 
 export default UserPage;

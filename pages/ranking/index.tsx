@@ -1,10 +1,8 @@
 import { m, Variants } from "framer-motion";
-import Head from "next/head";
 import Link from "next/link";
 import { ReactElement, useEffect, useState } from "react";
 import Loading from "../../components/common/Loading";
 import DashLayout from "../../layouts/DashLayout";
-import { fakeDataEntry } from "../api/fakeUsers";
 
 function Ranking() {
   const [sortBy, setSortBy] = useState("netWorth");
@@ -75,9 +73,6 @@ function Ranking() {
 
   return (
     <>
-      <Head>
-        <title>Ranking - toffee</title>
-      </Head>
       <div className="flex w-full justify-center">
         <div className="ml-3 flex w-full max-w-7xl flex-col items-center justify-start font-plusJakarta font-semibold lg:ml-0">
           {/* hidden if smaller than lg */}
@@ -293,7 +288,11 @@ const rankingDataLineVariants: Variants = {
 };
 
 Ranking.getLayout = function getLayout(page: ReactElement) {
-  return <DashLayout>{page}</DashLayout>;
+  const metaTags = {
+    title: "Ranking - toffee",
+    description: "Top investors on toffee",
+  };
+  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
 };
 
 export default Ranking;

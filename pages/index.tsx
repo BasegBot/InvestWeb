@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState } from "react";
 import HomeLayout from "../layouts/HomeLayout";
 import { homeMain } from "../layouts/NavTemplates";
 import Image from "next/image";
-import Head from "next/head";
 
 function Home() {
   const [emotesUrls, setEmotes] = useState([]);
@@ -74,9 +73,6 @@ function Home() {
 
   return (
     <>
-      <Head>
-        <title>Home - toffee</title>
-      </Head>
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="inline-grid grid-cols-1 gap-20 text-white md:grid-cols-3">
           <m.div
@@ -194,7 +190,14 @@ const slideShowVariants = {
 
 // set the layout for the page, this is used to wrap the page in a layout
 Home.getLayout = function getLayout(page: ReactElement) {
-  return <HomeLayout navOptions={homeMain}>{page}</HomeLayout>;
+  const metaTags = {
+    title: "Home - toffee",
+  };
+  return (
+    <HomeLayout navOptions={homeMain} metaTags={metaTags}>
+      {page}
+    </HomeLayout>
+  );
 };
 
 export default Home;
