@@ -555,13 +555,10 @@ UserPage.getInitialProps = async (context: {
   query: { username: string };
   req: any;
 }) => {
-  let host = process.env.NEXT_PUBLIC_URL;
-  console.log(host);
-  if (context.req) {
-    // if env breaks ???
-    let host = context.req.headers.host;
-  }
-  const url = new URL(`${host}/api/fakeUsers?u=${context.query.username}`);
+  // fix weird bug where host env was undefined on layout render, not direct page render
+  const url = new URL(
+    `https://invest.3zachm.dev/api/fakeUsers?u=${context.query.username}`
+  );
   const res = await fetch(url);
   let user = await res.json();
   if (user.error) {
