@@ -1,26 +1,37 @@
-import { m } from "framer-motion";
-import Head from "next/head";
+import { m, Variants } from "framer-motion";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 import DashLayout from "../../../layouts/DashLayout";
 import Image from "next/image";
 import Loading from "../../../components/common/Loading";
+import { GetServerSideProps } from "next";
 
-// TODO: Animations
+interface EmoteURLs {
+  "7tv": { [key: string]: string };
+  bttv: { [key: string]: string };
+  ffz: { [key: string]: string };
+  twitch: { [key: string]: string };
+  [key: string]: { [key: string]: string };
+}
 
-function UserPage() {
+interface UserPageProps {
+  userData: { [key: string]: any };
+}
+
+function UserPage(props: UserPageProps) {
   const [channelEmotes, setChannelEmotes] = useState<{
     [key: string]: { [key: string]: string };
   }>({});
-  const [userData, setUserData] = useState<{ [key: string]: any }>({});
   const [errorCode, setErrorCode] = useState<number | null>(null);
   const router = useRouter();
   const { username } = router.query;
-  const title = username ? `${username} - toffee` : "toffee";
 
   useEffect(() => {
     if (!router.isReady) return;
-    fetch("/api/7tv/emotes?c=61ad997effa9aba101bcfddf")
+    if (props.userData.error) {
+      setErrorCode(props.userData.error.code);
+    }
+    fetch("/api/emotes")
       .then((res) => res.json())
       .then((data) => {
         // if error, return
@@ -28,100 +39,65 @@ function UserPage() {
           setErrorCode(data.error.code);
           return;
         }
-        // construct js object with emote names as keys and emote urls as values
-        let emotes: { [key: string]: string } = {};
-        data.channel.user.emote_sets[0].emotes.forEach((emote: any) => {
+        // construct js object with emote names as keys and emote urls for each provider
+        // 7tv
+        let emotes: EmoteURLs = { "7tv": {}, bttv: {}, ffz: {}, twitch: {} };
+        data["7tv"].channel.forEach((emote: any) => {
           let base_url = emote.data.host.url;
           // get the largest emote size, append it to the base url
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
-          emotes[emote.data.name] = `https:${base_url}/${largest.name}`;
+          emotes["7tv"][emote.data.name] = `https:${base_url}/${largest.name}`;
         });
         // same for global emotes
-        data.global.namedEmoteSet.emotes.forEach((emote: any) => {
+        data["7tv"].global.forEach((emote: any) => {
           let base_url = emote.data.host.url;
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
-          emotes[emote.data.name] = `https:${base_url}/${largest.name}`;
+          emotes["7tv"][emote.data.name] = `https:${base_url}/${largest.name}`;
         });
-        // set 7tv key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, "7tv": emotes }));
-      });
-    fetch("/api/bttv/emotes?c=56418014")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-          return;
-        }
-        let emotes: { [key: string]: string } = {};
-        data.channel.forEach((emote: any) => {
-          emotes[emote.code] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+        // bttv
+        data["bttv"].channel.forEach((emote: any) => {
+          emotes["bttv"][
+            emote.code
+          ] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
         });
-        data.global.forEach((emote: any) => {
-          emotes[emote.code] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+        data["bttv"].global.forEach((emote: any) => {
+          emotes["bttv"][
+            emote.code
+          ] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
         });
-        // add as bttv key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, bttv: emotes }));
-      });
-    fetch("/api/ffz/emotes?s=341402")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-          return;
-        }
-        let emotes: { [key: string]: string } = {};
-        data.channel.forEach((emote: any) => {
+        // ffz
+        data["ffz"].channel.forEach((emote: any) => {
           // ffz emotes don't have all sizes available, so we need to get the largest one by taking the largest key in the urls object
-          emotes[emote.name] = `https:${
+          emotes["ffz"][emote.name] = `https:${
             emote.urls[
               Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
             ]
           }`;
         });
-        data.global.forEach((emote: any) => {
-          emotes[emote.name] = `https:${
+        data["ffz"].global.forEach((emote: any) => {
+          emotes["ffz"][emote.name] = `https:${
             emote.urls[
               Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
             ]
           }`;
         });
-        // add as ffz key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, ffz: emotes }));
-      });
-    fetch("/api/twitch/emotes?c=56418014")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-          return;
-        }
-        let emotes: { [key: string]: string } = {};
-        data.channel.forEach((emote: any) => {
-          emotes[emote.name] = emote.images["url_4x"];
+        // twitch
+        data["twitch"].channel.forEach((emote: any) => {
+          emotes["twitch"][emote.name] = emote.images["url_4x"];
         });
-        data.global.forEach((emote: any) => {
-          emotes[emote.name] = emote.images["url_4x"];
+        data["twitch"].global.forEach((emote: any) => {
+          emotes["twitch"][emote.name] = emote.images["url_4x"];
         });
-        // add as twitch key to channelEmotes
-        setChannelEmotes((prev) => ({ ...prev, ttv: emotes }));
-      });
-    fetch(`/api/fakeUsers?u=${username}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setErrorCode(data.error.code);
-        }
-        setUserData(data.data);
+        // set emotes to channelEmotes
+        setChannelEmotes(emotes);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
   if (errorCode !== null) {
     // 20000 = user not found
-    // 10000 = 7tv api error
-    // 10100 = Twitch api error
-    // 10200 = BTTV api error
-    // 10300 = FFZ api error
+    // 10000 = emote api error
+    // 10100 = twitch api error
     const errorMsg = errorCode === 20000 ? "User not found" : "API error";
     return (
       <m.div
@@ -136,62 +112,57 @@ function UserPage() {
   }
 
   // if json is empty, and if channelEmotes is incomplete, show loading screen
-  if (
-    Object.keys(channelEmotes).length < 4 ||
-    !userData ||
-    Object.keys(userData).length === 0
-  ) {
+  if (Object.keys(channelEmotes).length < 4) {
     return (
       <div className="flex h-screen w-full items-center justify-center text-3xl">
         <Loading />
       </div>
     );
   }
-  console.log(channelEmotes);
+
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta
-          name="description"
-          content={`${username}'s portfolio on toffee`}
-        />
-      </Head>
       <div className="flex justify-center">
-        <div className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2">
+        <m.div
+          className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2"
+          variants={containerVariants}
+        >
           {/*  User "banner"  */}
-          <div className="col-span-10 mb-2 rounded-2xl bg-zinc-800 bg-opacity-70 p-3">
+          <m.div
+            className="col-span-10 mb-2 rounded-2xl bg-zinc-800 bg-opacity-70 p-3"
+            variants={userBannerVariants}
+          >
             <div className="flex items-center justify-between p-4">
               <div className="flex flex-row items-center">
-                <div className="relative bottom-[70px] w-[169px]">
+                <div className="relative bottom-[54px] -left-7 w-[110px] md:bottom-[70px] md:left-0 md:w-[169px]">
                   <Image
-                    src={userData.avatar_url}
+                    src={props.userData.avatar_url}
                     alt="User avatar"
                     width={140}
                     height={140}
                     priority
                     className="absolute rounded-lg border-4"
                     style={{
-                      borderColor: userData.badges[0]
-                        ? userData.badges[0].color
+                      borderColor: props.userData.badges[0]
+                        ? props.userData.badges[0].color
                         : "grey",
                       // "glow" effect
                       boxShadow: `0px 0px 20px 1px ${
-                        userData.badges[0]
-                          ? userData.badges[0].color
+                        props.userData.badges[0]
+                          ? props.userData.badges[0].color
                           : "transparent"
                       }`,
                     }}
                   />
                 </div>
-                <div className="flex-col">
-                  <h1 className="text-4xl font-semibold text-white">
-                    {userData.name}
+                <div className="flex-col overflow-hidden overflow-ellipsis whitespace-nowrap">
+                  <h1 className="w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-2xl font-semibold text-white lg:text-4xl">
+                    {props.userData.name}
                   </h1>
                   {/*  User's badges  */}
                   <div className="mt-1 flex flex-row text-sm">
-                    {userData.badges ? (
-                      userData.badges.map(
+                    {props.userData.badges ? (
+                      props.userData.badges.map(
                         (badge: {
                           name: string;
                           color: string;
@@ -220,14 +191,17 @@ function UserPage() {
                     $
                   </span>
                   <span className="text-4xl text-white">
-                    {userData.net_worth.toLocaleString("en-US")}
+                    {props.userData.net_worth.toLocaleString("en-US")}
                   </span>
                 </h1>
               </div>
             </div>
-          </div>
+          </m.div>
           {/*  Main Container  */}
-          <div className="col-span-10 inline-grid grid-cols-7 gap-3 rounded-2xl lg:col-span-7">
+          <m.div
+            className="col-span-10 inline-grid grid-cols-7 gap-3 rounded-2xl lg:col-span-7"
+            variants={mainContainerVariants}
+          >
             {/*  User's Rank/Graph  */}
             <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70">
               <div className="flex flex-row items-center justify-between p-5">
@@ -238,7 +212,7 @@ function UserPage() {
                   <div className="flex items-center text-3xl font-bold">
                     <span className="text-zinc-400">#</span>
                     <span className="text-white">
-                      {userData.rank.toLocaleString("en-US")}
+                      {props.userData.rank.toLocaleString("en-US")}
                     </span>
                   </div>
                 </div>
@@ -256,7 +230,7 @@ function UserPage() {
                       $
                     </span>
                     <span className="text-3xl text-white sm:text-4xl">
-                      {userData.net_worth.toLocaleString("en-US")}
+                      {props.userData.net_worth.toLocaleString("en-US")}
                     </span>
                   </h1>
                 </div>
@@ -275,7 +249,7 @@ function UserPage() {
                 {errorCode === 20000 ? (
                   <h1 className=" text-zinc-400">{`Could not load assets`}</h1>
                 ) : (
-                  userData.assets.map(
+                  props.userData.assets.map(
                     (asset: {
                       name: string;
                       count: number;
@@ -322,7 +296,7 @@ function UserPage() {
                           </div>
                           <div className="flex w-full flex-row items-center justify-center">
                             {
-                              // show provider logo (7tv, bttv, ffz, ttv)
+                              // show provider logo (7tv, bttv, ffz, twitch)
                               asset.provider === "7tv" ? (
                                 <div className="mr-1 pt-[1px] text-7tv ">
                                   <SevenTVLogo />
@@ -336,7 +310,7 @@ function UserPage() {
                                   <FFZLogo />
                                 </div>
                               ) : (
-                                <div className="mr-1 w-4 pt-[1px] text-ttv">
+                                <div className="mr-1 w-4 pt-[1px] text-twitch">
                                   <TwitchLogo />
                                 </div>
                               )
@@ -352,29 +326,41 @@ function UserPage() {
                 )}
               </div>
             </div>
-          </div>
+          </m.div>
           {/*  Sidebar  */}
-          <div className="col-span-10 flex flex-col justify-start md:flex-row lg:col-span-3 lg:flex-col">
-            <div className="center mb-3 mr-3 inline-grid grid-cols-2 gap-3 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 text-xl font-medium lg:mr-0">
+          <m.div
+            className="col-span-10 flex flex-col justify-start md:flex-row lg:col-span-3 lg:flex-col"
+            variants={sidebarVariants}
+          >
+            <m.div
+              className="center mb-3 mr-3 inline-grid grid-cols-2 gap-3 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 text-xl font-medium lg:mr-0"
+              variants={sidebarItemVariants}
+            >
               {/*  User's Stats, left side is label, right side is value  */}
               <h1>Points</h1>
-              <h1>{userData.points.toLocaleString("en-US")}</h1>
+              <h1>{props.userData.points.toLocaleString("en-US")}</h1>
               <h1>Shares</h1>
-              <h1>{userData.shares.toLocaleString("en-US")}</h1>
+              <h1>{props.userData.shares.toLocaleString("en-US")}</h1>
               <h1>Trades</h1>
-              <h1>{(userData.trades ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(props.userData.trades ?? 0).toLocaleString("en-US")}</h1>
               <h1>Peak rank</h1>
-              <h1>{(userData.peak_rank ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(props.userData.peak_rank ?? 0).toLocaleString("en-US")}</h1>
               <h1>Joined</h1>
               <h1>
-                {new Date(userData.joined ?? 0).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                })}
+                {new Date(props.userData.joined ?? 0).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "short",
+                  }
+                )}
               </h1>
-            </div>
+            </m.div>
             {/*  User's Favorite Emote  */}
-            <div className="flex flex-col rounded-2xl bg-zinc-800 bg-opacity-70">
+            <m.div
+              className="flex flex-col rounded-2xl bg-zinc-800 bg-opacity-70"
+              variants={sidebarItemVariants}
+            >
               <div className="h-11 w-full rounded-t-2xl bg-pink-400">
                 <h1 className="m-1 text-center text-2xl font-bold">
                   Favorite Emote
@@ -385,9 +371,9 @@ function UserPage() {
                   This user has not yet set a favorite emote.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
+            </m.div>
+          </m.div>
+        </m.div>
       </div>
     </>
   );
@@ -479,8 +465,130 @@ const TwitchLogo = () => {
   );
 };
 
+const containerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+      delayChildren: 0.3,
+      staggerChildren: 0.25,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 20,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const userBannerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.75,
+      type: "spring",
+    },
+  },
+};
+
+const mainContainerVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+    },
+  },
+};
+
+const sidebarVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+      delayChildren: 0.3,
+      staggerChildren: 0.25,
+    },
+  },
+};
+
+const sidebarItemVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.75,
+      ease: "easeOut",
+    },
+  },
+};
+
+export const getServerSideProps: GetServerSideProps<UserPageProps> = async (
+  context
+) => {
+  // cache, currently 30s till stale
+  context.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=45, stale-while-revalidate=30"
+  );
+  // data fetch
+  const url = new URL(
+    `/api/fakeUsers?u=${context.query.username}`,
+    process.env.NEXT_PUBLIC_URL
+  );
+  const res = await fetch(url);
+  let user = await res.json();
+  // return error in user.data if user not found
+  if (user.error) {
+    user = { data: user };
+  }
+  return { props: { userData: user.data } };
+};
+
 UserPage.getLayout = function getLayout(page: ReactElement) {
-  return <DashLayout>{page}</DashLayout>;
+  const { userData } = page.props;
+  const metaTags = {
+    title: !userData.error
+      ? `${userData.name ?? "User 404"} - toffee`
+      : "User 404 - toffee",
+    description: !userData.error
+      ? `${userData.name}'s portfolio on toffee`
+      : "Couldn't find that user on toffee... :(",
+    imageUrl: !userData.error ? userData.avatar_url : undefined,
+    misc: {
+      "twitter:card": "summary",
+    },
+  };
+  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
 };
 
 export default UserPage;

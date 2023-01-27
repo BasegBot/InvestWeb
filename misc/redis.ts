@@ -24,10 +24,11 @@ export function createRedisInstance(config = getRedisConfiguration()) {
       lazyConnect: true,
       showFriendlyErrorStack: true,
       enableAutoPipelining: true,
-      maxRetriesPerRequest: 0,
+      maxRetriesPerRequest: 3,
       retryStrategy: (times: number) => {
         if (times > 3) {
-          throw new Error(`[Redis] Could not connect after ${times} attempts`);
+          console.log(`[Redis] Could not connect after ${times} attempts`);
+          return undefined;
         }
 
         return Math.min(times * 200, 1000);
@@ -45,11 +46,11 @@ export function createRedisInstance(config = getRedisConfiguration()) {
     const redis = new Redis(options);
 
     redis.on("error", (error: unknown) => {
-      console.warn("[Redis] Error connecting", error);
+      console.warn("[Redis] ", error);
     });
 
     return redis;
   } catch (e) {
-    throw new Error(`[Redis] Could not create a Redis instance`);
+    console.log(`[Redis] Could not create a Redis instance`);
   }
 }

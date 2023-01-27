@@ -1,5 +1,4 @@
 import { m, Variants } from "framer-motion";
-import Head from "next/head";
 import Image from "next/image";
 import { ReactElement } from "react";
 import HomeLayout from "../layouts/HomeLayout";
@@ -8,9 +7,6 @@ import { homeMain } from "../layouts/NavTemplates";
 function Team() {
   return (
     <>
-      <Head>
-        <title>Team - toffee</title>
-      </Head>
       <div className="flex min-h-screen flex-col items-center justify-center py-2">
         <m.div
           className="grid w-[90vw] grid-cols-1 py-2 sm:grid-cols-2 md:grid-cols-4 lg:w-[75vw]"
@@ -136,7 +132,15 @@ const headerVariants: Variants = {
 };
 
 Team.getLayout = function getLayout(page: ReactElement) {
-  return <HomeLayout navOptions={homeMain}>{page}</HomeLayout>;
+  const metaTags = {
+    title: "Team - toffee",
+    description: "Meet the team behind toffee",
+  };
+  return (
+    <HomeLayout navOptions={homeMain} metaTags={metaTags}>
+      {page}
+    </HomeLayout>
+  );
 };
 
 export default Team;

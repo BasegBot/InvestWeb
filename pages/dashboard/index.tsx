@@ -1,5 +1,4 @@
 import { m, Variants } from "framer-motion";
-import Head from "next/head";
 import { ReactElement } from "react";
 import DashLayout from "../../layouts/DashLayout";
 
@@ -7,9 +6,6 @@ import DashLayout from "../../layouts/DashLayout";
 function Dashboard() {
   return (
     <>
-      <Head>
-        <title>Dashboard - toffee</title>
-      </Head>
       <m.div
         className="inline-grid w-full grid-cols-1 pt-2 pl-2 lg:h-full lg:grid-cols-5 lg:pl-0 lg:pr-2"
         variants={gridContainerVariants}
@@ -83,7 +79,8 @@ const gridItemVariants: Variants = {
 };
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
-  return <DashLayout>{page}</DashLayout>;
+  const metaTags = {};
+  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
 };
 
 export default Dashboard;

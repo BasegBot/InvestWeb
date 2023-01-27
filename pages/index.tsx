@@ -3,15 +3,13 @@ import { ReactElement, useEffect, useState } from "react";
 import HomeLayout from "../layouts/HomeLayout";
 import { homeMain } from "../layouts/NavTemplates";
 import Image from "next/image";
-import Head from "next/head";
 
 function Home() {
-  let api7tvEmotes = `/api/7tv/emotes?c=61ad997effa9aba101bcfddf`;
   const [emotesUrls, setEmotes] = useState([]);
   const [currentEmote, setCurrentEmote] = useState(0);
 
   useEffect(() => {
-    fetch(api7tvEmotes)
+    fetch("/api/emotes")
       .then((res) => res.json())
       .then((data) => {
         // if error, return
@@ -19,19 +17,16 @@ function Home() {
           return;
         }
         // get all emote URLs
-        let emoteUrls = data.channel.user.emote_sets[0].emotes.map(
-          (emote: any) => {
-            let base_url = emote.data.host.url;
-            // get the largest emote size, append it to the base url
-            let largest =
-              emote.data.host.files[emote.data.host.files.length - 1];
-            // if width != height, skip it
-            if (largest.width !== largest.height) {
-              return null;
-            }
-            return `https:${base_url}/${largest.name}`;
+        let emoteUrls = data["7tv"].channel.map((emote: any) => {
+          let base_url = emote.data.host.url;
+          // get the largest emote size, append it to the base url
+          let largest = emote.data.host.files[emote.data.host.files.length - 1];
+          // if width != height, skip it
+          if (largest.width !== largest.height) {
+            return null;
           }
-        );
+          return `https:${base_url}/${largest.name}`;
+        });
 
         // remove null values
 
@@ -78,9 +73,6 @@ function Home() {
 
   return (
     <>
-      <Head>
-        <title>Home - toffee</title>
-      </Head>
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="inline-grid grid-cols-1 gap-20 text-white md:grid-cols-3">
           <m.div
@@ -198,7 +190,14 @@ const slideShowVariants = {
 
 // set the layout for the page, this is used to wrap the page in a layout
 Home.getLayout = function getLayout(page: ReactElement) {
-  return <HomeLayout navOptions={homeMain}>{page}</HomeLayout>;
+  const metaTags = {
+    title: "Home - toffee",
+  };
+  return (
+    <HomeLayout navOptions={homeMain} metaTags={metaTags}>
+      {page}
+    </HomeLayout>
+  );
 };
 
 export default Home;

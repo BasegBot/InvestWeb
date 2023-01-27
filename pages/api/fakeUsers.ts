@@ -16,6 +16,12 @@ export default async function handler(
   const sortAsc = req.query.a ? (req.query.a as string) : undefined;
 
   const redis = createRedisInstance();
+  if (!redis) {
+    res.status(500).json({
+      error: { message: "Internal API is down", code: 50100 },
+    });
+    return;
+  }
 
   let data = fakeData;
   // calculate all net worths
@@ -114,7 +120,7 @@ export default async function handler(
 interface asset {
   name: string;
   count: number;
-  provider: "7tv" | "bttv" | "ffz" | "ttv";
+  provider: "7tv" | "bttv" | "ffz" | "twitch";
 }
 interface fakeDataEntry {
   id: number;
@@ -185,7 +191,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfSigh",
         count: 1,
-        provider: "ttv",
+        provider: "twitch",
       },
       {
         name: "GabeN",
@@ -230,7 +236,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfHeart",
         count: 98,
-        provider: "ttv",
+        provider: "twitch",
       },
       {
         name: "Catge",
@@ -275,7 +281,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfRave",
         count: 5,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
     badges: [adminBadge, botDevBadge],
@@ -310,7 +316,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfMelt",
         count: 16,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
     badges: [CEOBadge, adminBadge],
@@ -350,7 +356,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfAngy",
         count: 90,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
     badges: [adminBadge, botDevBadge],
@@ -414,7 +420,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfHug",
         count: 19,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -433,7 +439,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfLUL",
         count: 9,
-        provider: "ttv",
+        provider: "twitch",
       },
       {
         name: "peepoSnow",
@@ -487,7 +493,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfPain",
         count: 37,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -526,7 +532,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfKnuckles",
         count: 2,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -565,7 +571,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfCheer",
         count: 54,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -604,7 +610,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfBonk",
         count: 77,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -648,7 +654,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfSit",
         count: 53,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -711,7 +717,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfGamba",
         count: 32,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -745,7 +751,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfFlower",
         count: 33,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -779,7 +785,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfFlower",
         count: 79,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -813,7 +819,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfSad",
         count: 2,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
@@ -847,7 +853,7 @@ const fakeData: fakeDataEntry[] = [
       {
         name: "annytfHeart",
         count: 63,
-        provider: "ttv",
+        provider: "twitch",
       },
     ],
   },
