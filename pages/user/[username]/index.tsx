@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useState } from "react";
 import DashLayout from "../../../layouts/DashLayout";
 import Image from "next/image";
 import Loading from "../../../components/common/Loading";
+import { GetServerSideProps } from "next";
 
 interface EmoteURLs {
   "7tv": { [key: string]: string };
@@ -551,20 +552,26 @@ const sidebarItemVariants: Variants = {
   },
 };
 
-UserPage.getInitialProps = async (context: {
-  query: { username: string };
-  req: any;
-}) => {
-  // fix weird bug where host env was undefined on layout render, not direct page render
+export const getServerSideProps: GetServerSideProps<UserPageProps> = async (
+  context
+) => {
+  // cache, currently 30s till stale
+  context.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=45, stale-while-revalidate=30"
+  );
+  // data fetch
   const url = new URL(
-    `https://invest.3zachm.dev/api/fakeUsers?u=${context.query.username}`
+    `/api/fakeUsers?u=${context.query.username}`,
+    process.env.NEXT_PUBLIC_URL
   );
   const res = await fetch(url);
   let user = await res.json();
+  // return error in user.data if user not found
   if (user.error) {
     user = { data: user };
   }
-  return { userData: user.data };
+  return { props: { userData: user.data } };
 };
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
@@ -576,7 +583,7 @@ UserPage.getLayout = function getLayout(page: ReactElement) {
     description: !userData.error
       ? `${userData.name}'s portfolio on toffee`
       : "Couldn't find that user on toffee... :(",
-    image: !userData.error ? userData.avatar_url : undefined,
+    imageUrl: !userData.error ? userData.avatar_url : undefined,
     misc: {
       "twitter:card": "summary",
     },
