@@ -5,6 +5,8 @@ import DashLayout from "../../../layouts/DashLayout";
 import Image from "next/image";
 import Loading from "../../../components/common/Loading";
 import { GetServerSideProps } from "next";
+import UserJSONEntry from "../../../interfaces/UserJSONEntry";
+import APIError from "../../../interfaces/APIError";
 
 interface EmoteURLs {
   "7tv": { [key: string]: string };
@@ -15,7 +17,8 @@ interface EmoteURLs {
 }
 
 interface UserPageProps {
-  userData: { [key: string]: any };
+  userData: UserJSONEntry;
+  serverError: APIError | null;
 }
 
 function UserPage(props: UserPageProps) {
@@ -28,8 +31,9 @@ function UserPage(props: UserPageProps) {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (props.userData.error) {
-      setErrorCode(props.userData.error.code);
+    // if it is of
+    if (props.serverError) {
+      setErrorCode(props.serverError.error.code);
     }
     fetch("/api/emotes")
       .then((res) => res.json())
@@ -342,18 +346,15 @@ function UserPage(props: UserPageProps) {
               <h1>Shares</h1>
               <h1>{props.userData.shares.toLocaleString("en-US")}</h1>
               <h1>Trades</h1>
-              <h1>{(props.userData.trades ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(0).toLocaleString("en-US")}</h1>
               <h1>Peak rank</h1>
-              <h1>{(props.userData.peak_rank ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(0).toLocaleString("en-US")}</h1>
               <h1>Joined</h1>
               <h1>
-                {new Date(props.userData.joined ?? 0).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "short",
-                  }
-                )}
+                {new Date(0).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                })}
               </h1>
             </m.div>
             {/*  User's Favorite Emote  */}
@@ -565,25 +566,30 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (
     `/api/fakeUsers?u=${context.query.username}`,
     process.env.NEXT_PUBLIC_URL
   );
+  // TODO: add error handling
   const res = await fetch(url);
   let user = await res.json();
-  // return error in user.data if user not found
   if (user.error) {
-    user = { data: user };
+    return {
+      props: {
+        userData: user,
+        serverError: user,
+      },
+    };
   }
-  return { props: { userData: user.data } };
+  return { props: { userData: user.data[0], serverError: null } };
 };
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
-  const { userData } = page.props;
+  const { userData, serverError } = page.props;
   const metaTags = {
-    title: !userData.error
+    title: !serverError
       ? `${userData.name ?? "User 404"} - toffee`
       : "User 404 - toffee",
-    description: !userData.error
+    description: !serverError
       ? `${userData.name}'s portfolio on toffee`
       : "Couldn't find that user on toffee... :(",
-    imageUrl: !userData.error ? userData.avatar_url : undefined,
+    imageUrl: !serverError ? userData.avatar_url : undefined,
     misc: {
       "twitter:card": "summary",
     },
