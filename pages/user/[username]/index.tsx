@@ -7,6 +7,7 @@ import Loading from "../../../components/common/Loading";
 import { GetServerSideProps } from "next";
 import UserJSONEntry from "../../../interfaces/UserJSONEntry";
 import APIError from "../../../interfaces/APIError";
+import RankChart from "../../../components/userpage/RankChart";
 
 interface EmoteURLs {
   "7tv": { [key: string]: string };
@@ -189,6 +190,7 @@ function UserPage(props: UserPageProps) {
                   </div>
                 </div>
               </div>
+              {/*  User's net worth (Desktop)  */}
               <div className="hidden md:block">
                 <h1>
                   <span className="text-4xl font-semibold text-zinc-400">
@@ -208,35 +210,54 @@ function UserPage(props: UserPageProps) {
           >
             {/*  User's Rank/Graph  */}
             <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70">
-              <div className="flex flex-row items-center justify-between p-5">
-                <div className="flex-col px-2">
-                  <h1 className="mb-1 whitespace-nowrap text-center text-xl font-medium text-white underline">
-                    Global Rank
-                  </h1>
-                  <div className="flex items-center text-3xl font-bold">
-                    <span className="text-zinc-400">#</span>
-                    <span className="text-white">
-                      {props.userData.rank.toLocaleString("en-US")}
-                    </span>
+              <div className="inline-grid w-full grid-cols-5 p-5">
+                <div className="col-span-1 flex items-center justify-start">
+                  <div className="flex-col px-2">
+                    <h1 className="mb-1 whitespace-nowrap text-center text-xl font-medium text-white underline">
+                      Global Rank
+                    </h1>
+                    <div className="flex items-center text-3xl font-bold">
+                      <span className="text-zinc-400">#</span>
+                      <span className="text-white">
+                        {props.userData.rank.toLocaleString("en-US")}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="hidden md:block">
-                  <Image
-                    src="/img/well_drawn_rank_chart.webp"
-                    alt="Rank chart"
-                    width={497}
-                    height={100}
-                  />
+                {/*  User's Rank Graph (Desktop)  */}
+                <div className="col-span-4 hidden w-full items-center justify-center pr-4 md:flex lg:justify-end">
+                  <div className="relative h-20 w-[90%] max-w-lg">
+                    <RankChart
+                      rankHistory={{
+                        rank: [1432, 1470, 1004, 1200, 600, 843, 1304],
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="md:hidden">
-                  <h1>
-                    <span className="text-3xl font-semibold text-zinc-400 sm:text-4xl">
-                      $
-                    </span>
-                    <span className="text-3xl text-white sm:text-4xl">
-                      {props.userData.net_worth.toLocaleString("en-US")}
-                    </span>
-                  </h1>
+                {/*  User's net worth (Mobile)  */}
+                <div className="col-span-4 md:hidden">
+                  <div className="flex h-full w-full items-center justify-end">
+                    <h1>
+                      <span className="text-3xl font-semibold text-zinc-400 sm:text-4xl">
+                        $
+                      </span>
+                      <span className="text-3xl text-white sm:text-4xl">
+                        {props.userData.net_worth.toLocaleString("en-US")}
+                      </span>
+                    </h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/*  User's Graph (Mobile)  */}
+            <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 md:hidden">
+              <div className="flex items-center justify-center">
+                <div className="relative h-20 w-full">
+                  <RankChart
+                    rankHistory={{
+                      rank: [1432, 1470, 1004, 1200, 600, 843, 1304],
+                    }}
+                  />
                 </div>
               </div>
             </div>
