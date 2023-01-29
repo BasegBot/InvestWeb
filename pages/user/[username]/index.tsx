@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next";
 import UserJSONEntry from "../../../interfaces/UserJSONEntry";
 import APIError from "../../../interfaces/APIError";
 import RankChart from "../../../components/userpage/RankChart";
+import RankHistoryJSON from "../../../interfaces/ChartRankHistoryJSON";
 
 interface EmoteURLs {
   "7tv": { [key: string]: string };
@@ -29,6 +30,9 @@ function UserPage(props: UserPageProps) {
   const [errorCode, setErrorCode] = useState<number | null>(null);
   const router = useRouter();
   const { username } = router.query;
+  const [rankHistory, setRankHistory] = useState<RankHistoryJSON>(
+    randomRankHistory(props.userData.rank)
+  );
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -227,11 +231,25 @@ function UserPage(props: UserPageProps) {
                 {/*  User's Rank Graph (Desktop)  */}
                 <div className="col-span-4 hidden w-full items-center justify-center pr-4 md:flex lg:justify-end">
                   <div className="relative h-20 w-[90%] max-w-lg">
-                    <RankChart
-                      rankHistory={{
-                        rank: [1432, 1470, 1004, 1200, 600, 843, 1304],
+                    <RankChart rankHistory={rankHistory} />
+                  </div>
+                  <div className="fixed">
+                    <m.div
+                      className="relative top-10 rounded-3xl bg-zinc-900 bg-opacity-70 p-1 px-2 hover:cursor-pointer lg:left-7"
+                      onClick={() =>
+                        setRankHistory(randomRankHistory(props.userData.rank))
+                      }
+                      initial={{
+                        color: "rgb(244, 114, 182)",
                       }}
-                    />
+                      whileHover={{
+                        scale: 1.05,
+                        backgroundColor: "rgb(244, 114, 182)",
+                        color: "white",
+                      }}
+                    >
+                      <p className="text-[8px]">randomize</p>
+                    </m.div>
                   </div>
                 </div>
                 {/*  User's net worth (Mobile)  */}
@@ -253,12 +271,26 @@ function UserPage(props: UserPageProps) {
             <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 md:hidden">
               <div className="flex items-center justify-center">
                 <div className="relative h-20 w-full">
-                  <RankChart
-                    rankHistory={{
-                      rank: [1432, 1470, 1004, 1200, 600, 843, 1304],
-                    }}
-                  />
+                  <RankChart rankHistory={rankHistory} />
                 </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <m.div
+                  className="rounded-3xl bg-zinc-900 bg-opacity-70 p-1 px-2 hover:cursor-pointer"
+                  onClick={() =>
+                    setRankHistory(randomRankHistory(props.userData.rank))
+                  }
+                  initial={{
+                    color: "rgb(244, 114, 182)",
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "rgb(244, 114, 182)",
+                    color: "white",
+                  }}
+                >
+                  <p className="text-[8px]">randomize</p>
+                </m.div>
               </div>
             </div>
             {/*  User's Assets  */}
@@ -485,6 +517,28 @@ const TwitchLogo = () => {
       </g>
     </svg>
   );
+};
+
+const randomRankHistory = (currentRank: number): RankHistoryJSON => {
+  // make a random rank array ranging 1 - 18, with a 75% chance to remain the same rank, end with current rank
+  const history: number[] = Array.from(
+    { length: 31 },
+    () => Math.floor(Math.random() * 18) + 1
+  )
+    .map((rank, i, arr) => {
+      if (i === 29) return currentRank;
+      if (Math.random() < 0.75) return arr[i - 1];
+      return rank;
+      // if rank same as previous, remove
+    })
+    .filter((rank, i, arr) => {
+      if (i === 0) return true;
+      return rank !== arr[i - 1];
+    });
+  history.push(currentRank);
+  return {
+    rank: history,
+  };
 };
 
 const containerVariants: Variants = {
