@@ -25,40 +25,8 @@ export default async function handler(
     });
     return;
   }
-
   let userJSON: UserJSONEntry[];
   let userList: UserFakeDataEntry[] = fakeData;
-  let avatarURL = "/img/logo.webp"; // default avatar
-  // if username is specified, only return that user
-  if (username) {
-    // filter for user, add required types
-    userList = userList.filter((u) => u.name === username);
-    if (userList.length === 0) {
-      res
-        .status(404)
-        .json({ error: { message: "User not found", code: 20000 } });
-      return;
-    }
-    // get twitch data for user
-    let twitchData: { data: { [key: string]: any }[] };
-    try {
-      twitchData = await getUserByName(redis, username);
-    } catch (e) {
-      res.status(500).json({
-        error: { message: "Twitch or internal API is down", code: 10100 },
-      });
-      return;
-    }
-    // if data is empty, user does not exist
-    if (twitchData.data.length === 0) {
-      // temp who cares
-      twitchData.data[0] = {};
-      twitchData.data[0].profile_image_url = "/img/logo.webp";
-    } else {
-      avatarURL = twitchData.data[0].profile_image_url;
-    }
-  }
-
   userJSON = userList.map((user) => {
     return {
       ...user,
@@ -66,7 +34,7 @@ export default async function handler(
       shares: user.assets.reduce((a, b) => a + b.count, 0),
       // sort users badges by priority
       badges: (user.badges ?? []).sort((a, b) => b.priority - a.priority ?? 0),
-      avatar_url: avatarURL,
+      avatar_url: "/img/logo.webp",
       rank: 0,
       // sort users assets by total value
       assets: user.assets.sort(
@@ -92,6 +60,40 @@ export default async function handler(
     };
   });
 
+  // if username is specified, only return that user
+  if (username) {
+    // if user does not exist, return error
+    userJSON = userJSON.filter((u) => u.name === username);
+    if (userJSON.length === 0) {
+      res
+        .status(404)
+        .json({ error: { message: "User not found", code: 20000 } });
+      return;
+    }
+    // get twitch data for user
+    let twitchData: { data: { [key: string]: any }[] };
+    try {
+      twitchData = await getUserByName(redis, username);
+    } catch (e) {
+      res.status(500).json({
+        error: { message: "Twitch or internal API is down", code: 10100 },
+      });
+      return;
+    }
+    // if data is empty, user does not exist
+    if (twitchData.data.length === 0) {
+      // temp who cares
+      twitchData.data[0] = {};
+      twitchData.data[0].profile_image_url = "/img/logo.webp";
+    }
+    // add users profile picture url
+    userJSON = userJSON.map((u) => {
+      return {
+        ...u,
+        avatar_url: twitchData.data[0].profile_image_url ?? "",
+      };
+    });
+  }
   if (sortBy) {
     if (sortBy === "daily_change") {
       userJSON = userJSON.sort((a, b) => b.daily_change - a.daily_change);
@@ -111,10 +113,6 @@ export default async function handler(
       userJSON = userJSON.reverse();
     }
   }
-  // fake loading time
-  await new Promise((resolve) =>
-    setTimeout(resolve, 250 + Math.random() * 1000)
-  );
   res.status(200).json({ data: userJSON });
 }
 
