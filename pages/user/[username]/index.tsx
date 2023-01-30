@@ -131,7 +131,7 @@ function UserPage(props: UserPageProps) {
 
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center overflow-hidden">
         <m.div
           className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2"
           variants={containerVariants}
