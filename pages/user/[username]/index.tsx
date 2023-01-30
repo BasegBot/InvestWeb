@@ -520,22 +520,15 @@ const TwitchLogo = () => {
 };
 
 const randomRankHistory = (currentRank: number): RankHistoryJSON => {
-  // make a random rank array ranging 1 - 18, with a 75% chance to remain the same rank, end with current rank
-  const history: number[] = Array.from(
-    { length: 31 },
-    () => Math.floor(Math.random() * 18) + 1
-  )
-    .map((rank, i, arr) => {
-      if (i === 29) return currentRank;
-      if (Math.random() < 0.75) return arr[i - 1];
-      return rank;
-      // if rank same as previous, remove
-    })
-    .filter((rank, i, arr) => {
-      if (i === 0) return true;
-      return rank !== arr[i - 1];
-    });
-  history.push(currentRank);
+  // make a random rank array of size 31 ranging 1 - 18, with a 50% chance to remain the previous index's rank, end with current rank
+  let prevRank = Math.floor(Math.random() * 18) + 1;
+  const history: number[] = Array.from({ length: 31 }, (_, i) => {
+    if (i === 30) return currentRank;
+    let chance = i === 0 ? 0 : Math.random();
+    prevRank = chance <= 0.5 ? prevRank : Math.floor(Math.random() * 18) + 1;
+    return prevRank;
+  });
+
   return {
     rank: history,
   };

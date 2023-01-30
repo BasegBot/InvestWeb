@@ -18,7 +18,20 @@ interface RankChartProps {
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
 
 function RankChart(props: RankChartProps) {
+  let delayed: boolean;
   const options: ChartOptions<"line"> = {
+    animation: {
+      onComplete: () => {
+        delayed = true;
+      },
+      delay: (context) => {
+        let delay = 0;
+        if (context.type === "data" && context.mode === "default" && !delayed) {
+          delay = context.dataIndex * 9;
+        }
+        return delay;
+      },
+    },
     plugins: {
       tooltip: {
         mode: "index",
