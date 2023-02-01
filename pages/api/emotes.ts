@@ -1,21 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createRedisInstance } from "../../misc/redis";
+import { createRedisInstance } from "../../lib/redis";
 import {
   getGlobalEmotes as get7TVGlobalEmotes,
   getChannelEmotes as get7TVChannelEmotes,
-} from "../../misc/7TVAPI";
+} from "../../lib/7TVAPI";
 import {
   getGlobalEmotes as getBTTVGlobalEmotes,
   getUserByID as getBTTVUser,
-} from "../../misc/BTTVAPI";
+} from "../../lib/BTTVAPI";
 import {
   getGlobalEmotes as getFFZGlobalEmotes,
   getEmoteSet as getFFZEmoteSet,
-} from "../../misc/FFZAPI";
+} from "../../lib/FFZAPI";
 import {
   getGlobalEmotes as getTwitchGlobalEmotes,
   getChannelEmotes as getTwitchChannelEmotes,
-} from "../../misc/TwitchAPI";
+} from "../../lib/TwitchAPI";
 
 type Data = {
   [key: string]: any;

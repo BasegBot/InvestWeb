@@ -133,7 +133,7 @@ function UserPage(props: UserPageProps) {
     <>
       <div className="flex justify-center overflow-hidden">
         <m.div
-          className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2"
+          className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-8 pl-2 font-plusJakarta sm:gap-3 lg:mt-12 lg:pl-0 lg:pr-2"
           variants={containerVariants}
         >
           {/*  User "banner"  */}
@@ -662,7 +662,11 @@ UserPage.getLayout = function getLayout(page: ReactElement) {
       "twitter:card": "summary",
     },
   };
-  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
+  return (
+    <DashLayout metaTags={metaTags} navIcon="user">
+      {page}
+    </DashLayout>
+  );
 };
 
 export default UserPage;

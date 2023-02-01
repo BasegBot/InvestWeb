@@ -11,6 +11,7 @@ import NavBar from "../components/dashboard/NavBar";
 
 interface DashLayoutProps {
   children: React.ReactNode;
+  navIcon?: string;
   metaTags: {
     title?: string;
     ogTitle?: string;
@@ -88,7 +89,7 @@ function DashLayout(props: DashLayoutProps) {
         {/* dashboard nav bar */}
         <LazyMotion features={domAnimation}>
           <AnimatePresence mode="wait">
-            <NavBar />
+            <NavBar initialPage={props.navIcon ?? ""} />
           </AnimatePresence>
         </LazyMotion>
         {/* dashboard content */}

@@ -80,7 +80,11 @@ const gridItemVariants: Variants = {
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
   const metaTags = {};
-  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
+  return (
+    <DashLayout metaTags={metaTags} navIcon="dashboard">
+      {page}
+    </DashLayout>
+  );
 };
 
 export default Dashboard;

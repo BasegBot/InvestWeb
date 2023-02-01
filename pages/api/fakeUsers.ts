@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import UserBadge from "../../interfaces/UserBadge";
 import UserFakeDataEntry from "../../interfaces/UserFakeDataEntry";
 import UserJSONEntry from "../../interfaces/UserJSONEntry";
-import { createRedisInstance } from "../../misc/redis";
-import { getUserByName } from "../../misc/TwitchAPI";
+import { createRedisInstance } from "../../lib/redis";
+import { getUserByName } from "../../lib/TwitchAPI";
 import { fakePrices } from "./fakePrices";
 
 type Data = {

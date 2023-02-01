@@ -290,7 +290,11 @@ Ranking.getLayout = function getLayout(page: ReactElement) {
     title: "Ranking - toffee",
     description: "Top investors on toffee",
   };
-  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
+  return (
+    <DashLayout metaTags={metaTags} navIcon="ranking">
+      {page}
+    </DashLayout>
+  );
 };
 
 export default Ranking;
