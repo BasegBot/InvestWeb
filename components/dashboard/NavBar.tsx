@@ -72,7 +72,7 @@ function NavBar(props: NavBarProps) {
               setActivePage("wiki");
             }}
           >
-            <ActiveLink href="/wiki/en" pageName="wiki">
+            <ActiveLink href="/wiki" pageName="wiki">
               <WikiIcon />
             </ActiveLink>
           </m.div>

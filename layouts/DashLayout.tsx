@@ -32,7 +32,7 @@ function DashLayout(props: DashLayoutProps) {
   const title = props.metaTags.title ?? "Dashboard - toffee";
   return (
     <m.div
-      className="bg-gradient-to-t from-zinc-900 to-[#3015457b]"
+      className="bg-zinc-900"
       initial="initial"
       animate="animate"
       exit="exit"
