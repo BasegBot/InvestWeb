@@ -14,7 +14,6 @@ export default function RenderMarkdown({ children }: RenderMarkdownProps) {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
-      // This doesnt work....
       components={{
         a: ({ node, ...props }) => {
           return (

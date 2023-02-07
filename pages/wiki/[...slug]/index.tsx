@@ -1,10 +1,8 @@
-import Image from "next/image";
 import { getAllWikiPaths, getWikiContent } from "../../../lib/wiki/api";
 import WikiPage from "../../../interfaces/WikiPage";
 import DashLayout from "../../../layouts/DashLayout";
 import Link from "next/link";
 import { m } from "framer-motion";
-import RenderMarkdown from "../../../components/wiki/RenderMarkdown";
 import PageBody from "../../../components/wiki/PageBody";
 import { ReactElement, useEffect, useState } from "react";
 
