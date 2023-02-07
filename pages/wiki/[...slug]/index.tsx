@@ -152,11 +152,7 @@ WikiLandingPage.getLayout = function getLayout(page: React.ReactNode) {
     title: "Wiki - toffee",
     description: "Wiki for toffee",
   };
-  return (
-    <DashLayout metaTags={metaTags} navIcon="wiki">
-      {page}
-    </DashLayout>
-  );
+  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
 };
 
 export default WikiLandingPage;

@@ -3,29 +3,25 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 
-interface NavBarProps {
-  initialPage: string;
-}
+const ActiveLink = (props: {
+  href: string;
+  pageName: string;
+  children: React.ReactNode;
+}) => {
+  const router = useRouter();
+  let styling = "text-white";
+  // if first part of path equals the pageName
+  if (router.pathname.split("/")[1] === props.pageName) {
+    styling = "text-[#a855f7]";
+  }
+  return (
+    <Link href={props.href} className={styling}>
+      {props.children}
+    </Link>
+  );
+};
 
-function NavBar(props: NavBarProps) {
-  const [activePage, setActivePage] = useState(props.initialPage);
-  const ActiveLink = (props: {
-    href: string;
-    pageName: string;
-    children: React.ReactNode;
-  }) => {
-    const router = useRouter();
-    let styling = "text-white";
-    if (activePage === props.pageName) {
-      styling = "text-[#a855f7]";
-    }
-    return (
-      <Link href={props.href} className={styling}>
-        {props.children}
-      </Link>
-    );
-  };
-
+function NavBar() {
   return (
     <div className="m-3">
       <m.div
@@ -38,13 +34,7 @@ function NavBar(props: NavBarProps) {
           className="flex flex-row items-center justify-center pl-5 lg:flex-col lg:pl-0 lg:pt-5"
           variants={navStripVariants}
         >
-          <m.div
-            variants={navIconVariants}
-            className="pr-5 lg:pr-0 lg:pb-3"
-            onClick={() => {
-              setActivePage("dashboard");
-            }}
-          >
+          <m.div variants={navIconVariants} className="pr-5 lg:pr-0 lg:pb-3">
             <ActiveLink href="/dashboard" pageName="dashboard">
               <DashIcon />
             </ActiveLink>
@@ -52,9 +42,6 @@ function NavBar(props: NavBarProps) {
           <m.div
             variants={navIconVariants}
             className="pr-5 lg:pr-0 lg:pt-3 lg:pb-3"
-            onClick={() => {
-              setActivePage("ranking");
-            }}
           >
             <ActiveLink href="/ranking" pageName="ranking">
               <RankingIcon />
@@ -65,13 +52,7 @@ function NavBar(props: NavBarProps) {
           className="flex flex-row items-center justify-center pr-5 lg:w-full lg:flex-col lg:pr-0 lg:pb-5"
           variants={navStripVariants}
         >
-          <m.div
-            variants={navIconVariants}
-            className="pr-5 lg:pr-0 lg:pb-3"
-            onClick={() => {
-              setActivePage("wiki");
-            }}
-          >
+          <m.div variants={navIconVariants} className="pr-5 lg:pr-0 lg:pb-3">
             <ActiveLink href="/wiki" pageName="wiki">
               <WikiIcon />
             </ActiveLink>

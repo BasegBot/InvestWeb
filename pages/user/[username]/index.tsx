@@ -662,11 +662,7 @@ UserPage.getLayout = function getLayout(page: ReactElement) {
       "twitter:card": "summary",
     },
   };
-  return (
-    <DashLayout metaTags={metaTags} navIcon="user">
-      {page}
-    </DashLayout>
-  );
+  return <DashLayout metaTags={metaTags}>{page}</DashLayout>;
 };
 
 export default UserPage;
