@@ -20,11 +20,16 @@ interface TableOfContentsItem {
 function WikiLandingPage(props: WikiLandingPageProps) {
   const [wikiContent, setWikiContent] = useState<ReactElement>(<></>);
   const [indexContent, setIndexContent] = useState<TableOfContentsItem[]>([]);
+  const [showMobileIndex, setShowMobileIndex] = useState<boolean>(false);
 
   // needed for proper hydration due to replacing some elements
   useEffect(() => {
-    setWikiContent(<PageBody>{props.page.content}</PageBody>);
-  }, [props.page.content]);
+    setWikiContent(
+      <PageBody currentLanguage={props.page.language} path={props.page.path}>
+        {props.page.content}
+      </PageBody>
+    );
+  }, [props.page.content, props.page.language, props.page.path]);
 
   useEffect(() => {
     const toc: TableOfContentsItem[] = [];
@@ -39,7 +44,6 @@ function WikiLandingPage(props: WikiLandingPageProps) {
       }
     });
     setIndexContent(toc);
-    console.log(toc);
   }, [wikiContent]);
 
   return (
@@ -71,6 +75,62 @@ function WikiLandingPage(props: WikiLandingPageProps) {
             </div>
           </div>
         </div>
+        {/* Mobile "Side"-bar */}
+        <div className="col-span-10 mb-6 lg:hidden">
+          <div className="w-full rounded-2xl rounded-tl-2xl bg-zinc-800 bg-opacity-70 p-6 text-left text-6xl text-white">
+            <div
+              className="flex cursor-pointer flex-row text-2xl"
+              onClick={() => setShowMobileIndex(!showMobileIndex)}
+            >
+              <div>Contents</div>
+              <m.svg
+                className="pointer-events-auto mt-2 ml-3 cursor-pointer lg:hidden"
+                origin="center"
+                width="20"
+                height="21"
+                viewBox="0 0 330 330"
+                x={0}
+                y={0}
+                animate={{ rotate: showMobileIndex ? 180 : 0 }}
+              >
+                <m.path
+                  d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"
+                  fill="white"
+                  stroke="white"
+                  strokeWidth="15"
+                  strokeLinecap="round"
+                />
+              </m.svg>
+            </div>
+            <m.div
+              className="overflow-hidden text-left text-orange-400"
+              animate={{
+                height: showMobileIndex ? "auto" : 0,
+                marginTop: showMobileIndex ? "0.5rem" : 0,
+              }}
+            >
+              {indexContent.map((item) => {
+                return (
+                  // increase indent based on heading level
+                  <div
+                    style={{
+                      paddingLeft: `${(parseInt(item.type[1]) - 2) * 2}rem`,
+                    }}
+                    className="text-xl"
+                    key={item.id}
+                  >
+                    <Link href={`#${item.id}`}>
+                      <p className="mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap hover:text-white">
+                        {item.text}
+                      </p>
+                    </Link>
+                  </div>
+                );
+              })}
+            </m.div>
+          </div>
+        </div>
+        {/* Main content */}
         <div className="col-span-10 rounded-2xl bg-zinc-800 bg-opacity-70 p-6 text-center text-6xl text-white lg:col-span-8 lg:rounded-tl-none">
           <m.div
             initial={{ opacity: 0 }}
@@ -126,6 +186,8 @@ export async function getStaticProps({ params }: Params) {
       page: {
         slug: params.slug,
         content: pageData.content,
+        language: lang,
+        path: path,
         data: pageData.data,
       },
     },

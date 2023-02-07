@@ -3,14 +3,21 @@ import RenderMarkdown from "./RenderMarkdown";
 
 interface PageBodyProps {
   children: string;
+  currentLanguage: string;
+  path: string;
 }
 
-export default function PageBody({ children }: PageBodyProps) {
+export default function PageBody(props: PageBodyProps) {
   return (
     <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
       <div className={mdStyles["markdown-body"]}>
         <div className="text-left">
-          <RenderMarkdown>{children}</RenderMarkdown>
+          <RenderMarkdown
+            path={props.path}
+            currentLanguage={props.currentLanguage}
+          >
+            {props.children}
+          </RenderMarkdown>
         </div>
       </div>
     </div>
