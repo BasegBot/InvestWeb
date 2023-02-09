@@ -5,6 +5,7 @@ import Link from "next/link";
 import { m } from "framer-motion";
 import PageBody from "../../../components/wiki/PageBody";
 import { ReactElement, useEffect, useState } from "react";
+import Image from "next/image";
 
 interface WikiLandingPageProps {
   children: React.ReactNode;
@@ -24,12 +25,8 @@ function WikiLandingPage(props: WikiLandingPageProps) {
 
   // needed for proper hydration due to replacing some elements
   useEffect(() => {
-    setWikiContent(
-      <PageBody currentLanguage={props.page.language} path={props.page.path}>
-        {props.page.content}
-      </PageBody>
-    );
-  }, [props.page.content, props.page.language, props.page.path]);
+    setWikiContent(<PageBody page={props.page}>{props.page.content}</PageBody>);
+  }, [props.page]);
 
   useEffect(() => {
     const toc: TableOfContentsItem[] = [];
@@ -46,9 +43,67 @@ function WikiLandingPage(props: WikiLandingPageProps) {
     setIndexContent(toc);
   }, [wikiContent]);
 
+  const dirPath = props.page.path.split("/").map((path, index) => {
+    // if home page, don't show
+    if (path === "home") return <></>;
+    return (
+      <div key={path} className="flex flex-row">
+        <span className="mx-2 flex items-center text-white">
+          <m.svg
+            viewBox={"0 0 24 24"}
+            width={20}
+            height={20}
+            origin="center"
+            color="currentColor"
+            fill="currentColor"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <m.path d="M6.23 20.23 8 22l10-10L8 2 6.23 3.77 14.46 12z" />
+          </m.svg>
+        </span>
+        <Link
+          href={`/wiki/${props.page.language}/${props.page.path
+            .split("/")
+            .slice(0, index + 1)
+            .join("/")}`}
+        >
+          <p className="hover:text-orange-400">{path}</p>
+        </Link>
+      </div>
+    );
+  });
+
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center p-3 font-plusJakarta ">
+    <div className="flex w-full flex-col items-center justify-center p-3 font-plusJakarta ">
       <div className="inline-grid h-full w-full max-w-screen-2xl grid-cols-10">
+        {/* Desktop Header */}
+        <div className="col-span-10 mb-2 hidden grid-cols-10 lg:inline-grid">
+          {/* Title */}
+          <div className="col-span-2 flex items-center justify-center">
+            <div className="text-2xl text-white">
+              <p>toffee wiki</p>
+            </div>
+            <Image
+              className="h-auto w-auto"
+              src="/img/logo.webp"
+              alt="toffee logo"
+              width={64}
+              height={64}
+            />
+          </div>
+          {/* Dir Path */}
+          <div className="col-span-8 ml-3 mb-3 mt-3 flex text-left text-xl">
+            <div className="flex w-auto flex-row items-center justify-start rounded-full bg-black p-2 px-4">
+              <Link href="/wiki">
+                <p className="hover:text-orange-400">home</p>
+              </Link>
+              {dirPath}
+            </div>
+          </div>
+        </div>
         {/* Sidebar */}
         <div className="col-span-2 hidden w-full flex-col items-center justify-center lg:block">
           <div className="w-full rounded-tl-2xl rounded-bl-2xl border-r-2 border-orange-400 border-opacity-60 bg-zinc-800 bg-opacity-70 p-6 text-left text-6xl text-white">
@@ -75,11 +130,22 @@ function WikiLandingPage(props: WikiLandingPageProps) {
             </div>
           </div>
         </div>
+        <div className="col-span-10 mb-6 lg:hidden">
+          {/* Dir Path Mobile */}
+          <div className="col-span-8 flex text-left text-xl">
+            <div className="flex w-auto flex-row items-center justify-start rounded-full bg-black p-2 px-4">
+              <Link href="/wiki">
+                <p className="hover:text-orange-400">home</p>
+              </Link>
+              {dirPath}
+            </div>
+          </div>
+        </div>
         {/* Mobile "Side"-bar */}
         <div className="col-span-10 mb-6 lg:hidden">
           <div className="w-full rounded-2xl rounded-tl-2xl bg-zinc-800 bg-opacity-70 p-6 text-left text-6xl text-white">
             <div
-              className="flex cursor-pointer flex-row text-2xl"
+              className="flex cursor-pointer flex-row justify-between text-2xl"
               onClick={() => setShowMobileIndex(!showMobileIndex)}
             >
               <div>Contents</div>
@@ -102,6 +168,7 @@ function WikiLandingPage(props: WikiLandingPageProps) {
                 />
               </m.svg>
             </div>
+
             <m.div
               className="overflow-hidden text-left text-orange-400"
               animate={{
@@ -131,7 +198,7 @@ function WikiLandingPage(props: WikiLandingPageProps) {
           </div>
         </div>
         {/* Main content */}
-        <div className="col-span-10 rounded-2xl bg-zinc-800 bg-opacity-70 p-6 text-center text-6xl text-white lg:col-span-8 lg:rounded-tl-none">
+        <div className="col-span-10 rounded-2xl bg-zinc-800 bg-opacity-70 px-6 pb-5 text-center text-6xl text-white lg:col-span-8 lg:rounded-tl-none">
           <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

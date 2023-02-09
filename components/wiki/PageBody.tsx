@@ -1,10 +1,10 @@
+import WikiPage from "../../interfaces/WikiPage";
 import mdStyles from "./markdown.module.css";
 import RenderMarkdown from "./RenderMarkdown";
 
 interface PageBodyProps {
   children: string;
-  currentLanguage: string;
-  path: string;
+  page: WikiPage;
 }
 
 export default function PageBody(props: PageBodyProps) {
@@ -12,12 +12,7 @@ export default function PageBody(props: PageBodyProps) {
     <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
       <div className={mdStyles["markdown-body"]}>
         <div className="text-left">
-          <RenderMarkdown
-            path={props.path}
-            currentLanguage={props.currentLanguage}
-          >
-            {props.children}
-          </RenderMarkdown>
+          <RenderMarkdown page={props.page}>{props.children}</RenderMarkdown>
         </div>
       </div>
     </div>

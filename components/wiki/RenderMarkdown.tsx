@@ -4,14 +4,17 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
+import WikiPage from "../../interfaces/WikiPage";
 
 interface RenderMarkdownProps {
   children: string;
-  path: string;
-  currentLanguage: string;
+  page: WikiPage;
 }
 
-export default function RenderMarkdown(pageprops: RenderMarkdownProps) {
+export default function RenderMarkdown({
+  children,
+  page,
+}: RenderMarkdownProps) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -22,10 +25,10 @@ export default function RenderMarkdown(pageprops: RenderMarkdownProps) {
           let href = props.href as string;
           if (!href.endsWith("/") && !href.startsWith("http")) {
             if (href.startsWith("/wiki/")) {
-              href = `/wiki/${pageprops.currentLanguage}${href.slice(5)}`;
+              href = `/wiki/${page.language}${href.slice(5)}`;
             } else {
               // if single relative
-              href = `/wiki/${pageprops.currentLanguage}/${pageprops.path}/${href}`;
+              href = `/wiki/${page.language}/${page.path}/${href}`;
             }
           }
           return (
@@ -38,7 +41,7 @@ export default function RenderMarkdown(pageprops: RenderMarkdownProps) {
           // if image is internal (relative), prefix it with the current page's path
           let src = props.src as string;
           if (!src.startsWith("http") && !src.startsWith("/")) {
-            src = `/img/wiki/${pageprops.path}/${src}`;
+            src = `/img/wiki/${page.path}/${src}`;
           }
           return (
             <div className="flex w-full flex-col items-center justify-center">
@@ -54,7 +57,7 @@ export default function RenderMarkdown(pageprops: RenderMarkdownProps) {
         },
       }}
     >
-      {pageprops.children}
+      {children}
     </ReactMarkdown>
   );
 }
