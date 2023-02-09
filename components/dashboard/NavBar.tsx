@@ -1,6 +1,25 @@
 import { m, Variants } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useState } from "react";
+
+const ActiveLink = (props: {
+  href: string;
+  pageName: string;
+  children: React.ReactNode;
+}) => {
+  const router = useRouter();
+  let styling = "text-white";
+  // if first part of path equals the pageName
+  if (router.pathname.split("/")[1] === props.pageName) {
+    styling = "text-[#a855f7]";
+  }
+  return (
+    <Link href={props.href} className={styling}>
+      {props.children}
+    </Link>
+  );
+};
 
 function NavBar() {
   return (
@@ -16,7 +35,7 @@ function NavBar() {
           variants={navStripVariants}
         >
           <m.div variants={navIconVariants} className="pr-5 lg:pr-0 lg:pb-3">
-            <ActiveLink href="/dashboard">
+            <ActiveLink href="/dashboard" pageName="dashboard">
               <DashIcon />
             </ActiveLink>
           </m.div>
@@ -24,7 +43,7 @@ function NavBar() {
             variants={navIconVariants}
             className="pr-5 lg:pr-0 lg:pt-3 lg:pb-3"
           >
-            <ActiveLink href="/ranking">
+            <ActiveLink href="/ranking" pageName="ranking">
               <RankingIcon />
             </ActiveLink>
           </m.div>
@@ -33,8 +52,13 @@ function NavBar() {
           className="flex flex-row items-center justify-center pr-5 lg:w-full lg:flex-col lg:pr-0 lg:pb-5"
           variants={navStripVariants}
         >
+          <m.div variants={navIconVariants} className="pr-5 lg:pr-0 lg:pb-3">
+            <ActiveLink href="/wiki" pageName="wiki">
+              <WikiIcon />
+            </ActiveLink>
+          </m.div>
           <m.div
-            className="fill-white stroke-white"
+            className="fill-white stroke-white lg:pt-3"
             whileHover={{
               color: "#fca311",
             }}
@@ -113,16 +137,16 @@ const RankingIcon = () => {
   );
 };
 
-const ActiveLink = (props: { href: string; children: React.ReactNode }) => {
-  const router = useRouter();
-  let styling = "text-white";
-  if (router.pathname === props.href) {
-    styling = "text-[#a855f7]";
-  }
+const WikiIcon = () => {
   return (
-    <Link href={props.href} className={styling}>
-      {props.children}
-    </Link>
+    <NavSvgWrap>
+      <m.path
+        d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"
+        strokeWidth="1"
+        stroke="currentColor"
+        fill="currentColor"
+      />
+    </NavSvgWrap>
   );
 };
 
@@ -149,7 +173,7 @@ const navContainerVariants: Variants = {
 const navStripVariants: Variants = {
   initial: {
     opacity: 0,
-    y: 100,
+    y: 40,
   },
   animate: {
     opacity: 1,

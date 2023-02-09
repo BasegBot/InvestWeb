@@ -5,6 +5,10 @@ import DashLayout from "../../../layouts/DashLayout";
 import Image from "next/image";
 import Loading from "../../../components/common/Loading";
 import { GetServerSideProps } from "next";
+import UserJSONEntry from "../../../interfaces/UserJSONEntry";
+import APIError from "../../../interfaces/APIError";
+import RankChart from "../../../components/userpage/RankChart";
+import RankHistoryJSON from "../../../interfaces/ChartRankHistoryJSON";
 
 interface EmoteURLs {
   "7tv": { [key: string]: string };
@@ -15,7 +19,8 @@ interface EmoteURLs {
 }
 
 interface UserPageProps {
-  userData: { [key: string]: any };
+  userData: UserJSONEntry;
+  serverError: APIError | null;
 }
 
 function UserPage(props: UserPageProps) {
@@ -25,11 +30,15 @@ function UserPage(props: UserPageProps) {
   const [errorCode, setErrorCode] = useState<number | null>(null);
   const router = useRouter();
   const { username } = router.query;
+  const [rankHistory, setRankHistory] = useState<RankHistoryJSON>(
+    randomRankHistory(props.userData.rank)
+  );
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (props.userData.error) {
-      setErrorCode(props.userData.error.code);
+    // if it is of
+    if (props.serverError) {
+      setErrorCode(props.serverError.error.code);
     }
     fetch("/api/emotes")
       .then((res) => res.json())
@@ -122,9 +131,9 @@ function UserPage(props: UserPageProps) {
 
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center overflow-hidden">
         <m.div
-          className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-3 pl-2 font-plusJakarta lg:mt-12 lg:pl-0 lg:pr-2"
+          className="mt-7 inline-grid w-[calc(100%-40px)] max-w-5xl grid-cols-10 gap-8 pl-2 font-plusJakarta sm:gap-3 lg:mt-12 lg:pl-0 lg:pr-2"
           variants={containerVariants}
         >
           {/*  User "banner"  */}
@@ -185,6 +194,7 @@ function UserPage(props: UserPageProps) {
                   </div>
                 </div>
               </div>
+              {/*  User's net worth (Desktop)  */}
               <div className="hidden md:block">
                 <h1>
                   <span className="text-4xl font-semibold text-zinc-400">
@@ -204,36 +214,83 @@ function UserPage(props: UserPageProps) {
           >
             {/*  User's Rank/Graph  */}
             <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70">
-              <div className="flex flex-row items-center justify-between p-5">
-                <div className="flex-col px-2">
-                  <h1 className="mb-1 whitespace-nowrap text-center text-xl font-medium text-white underline">
-                    Global Rank
-                  </h1>
-                  <div className="flex items-center text-3xl font-bold">
-                    <span className="text-zinc-400">#</span>
-                    <span className="text-white">
-                      {props.userData.rank.toLocaleString("en-US")}
-                    </span>
+              <div className="inline-grid w-full grid-cols-5 p-5">
+                <div className="col-span-1 flex items-center justify-start">
+                  <div className="flex-col px-2">
+                    <h1 className="mb-1 whitespace-nowrap text-center text-xl font-medium text-white underline">
+                      Global Rank
+                    </h1>
+                    <div className="flex items-center text-3xl font-bold">
+                      <span className="text-zinc-400">#</span>
+                      <span className="text-white">
+                        {props.userData.rank.toLocaleString("en-US")}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="hidden md:block">
-                  <Image
-                    src="/img/well_drawn_rank_chart.webp"
-                    alt="Rank chart"
-                    width={497}
-                    height={100}
-                  />
+                {/*  User's Rank Graph (Desktop)  */}
+                <div className="col-span-4 hidden w-full items-center justify-center pr-4 md:flex lg:justify-end">
+                  <div className="relative h-20 w-[90%] max-w-lg">
+                    <RankChart rankHistory={rankHistory} />
+                  </div>
+                  <div className="fixed">
+                    <m.div
+                      className="relative top-10 rounded-3xl bg-zinc-900 bg-opacity-70 p-1 px-2 hover:cursor-pointer lg:left-7"
+                      onClick={() =>
+                        setRankHistory(randomRankHistory(props.userData.rank))
+                      }
+                      initial={{
+                        color: "rgb(244, 114, 182)",
+                      }}
+                      whileHover={{
+                        scale: 1.05,
+                        backgroundColor: "rgb(244, 114, 182)",
+                        color: "white",
+                      }}
+                    >
+                      <p className="text-[8px]">randomize</p>
+                    </m.div>
+                  </div>
                 </div>
-                <div className="md:hidden">
-                  <h1>
-                    <span className="text-3xl font-semibold text-zinc-400 sm:text-4xl">
-                      $
-                    </span>
-                    <span className="text-3xl text-white sm:text-4xl">
-                      {props.userData.net_worth.toLocaleString("en-US")}
-                    </span>
-                  </h1>
+                {/*  User's net worth (Mobile)  */}
+                <div className="col-span-4 md:hidden">
+                  <div className="flex h-full w-full items-center justify-end">
+                    <h1>
+                      <span className="text-3xl font-semibold text-zinc-400 sm:text-4xl">
+                        $
+                      </span>
+                      <span className="text-3xl text-white sm:text-4xl">
+                        {props.userData.net_worth.toLocaleString("en-US")}
+                      </span>
+                    </h1>
+                  </div>
                 </div>
+              </div>
+            </div>
+            {/*  User's Graph (Mobile)  */}
+            <div className="col-span-7 rounded-2xl bg-zinc-800 bg-opacity-70 p-5 md:hidden">
+              <div className="flex items-center justify-center">
+                <div className="relative h-20 w-full">
+                  <RankChart rankHistory={rankHistory} />
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <m.div
+                  className="rounded-3xl bg-zinc-900 bg-opacity-70 p-1 px-2 hover:cursor-pointer"
+                  onClick={() =>
+                    setRankHistory(randomRankHistory(props.userData.rank))
+                  }
+                  initial={{
+                    color: "rgb(244, 114, 182)",
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "rgb(244, 114, 182)",
+                    color: "white",
+                  }}
+                >
+                  <p className="text-[8px]">randomize</p>
+                </m.div>
               </div>
             </div>
             {/*  User's Assets  */}
@@ -342,18 +399,15 @@ function UserPage(props: UserPageProps) {
               <h1>Shares</h1>
               <h1>{props.userData.shares.toLocaleString("en-US")}</h1>
               <h1>Trades</h1>
-              <h1>{(props.userData.trades ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(0).toLocaleString("en-US")}</h1>
               <h1>Peak rank</h1>
-              <h1>{(props.userData.peak_rank ?? 0).toLocaleString("en-US")}</h1>
+              <h1>{(0).toLocaleString("en-US")}</h1>
               <h1>Joined</h1>
               <h1>
-                {new Date(props.userData.joined ?? 0).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "short",
-                  }
-                )}
+                {new Date(0).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                })}
               </h1>
             </m.div>
             {/*  User's Favorite Emote  */}
@@ -465,6 +519,21 @@ const TwitchLogo = () => {
   );
 };
 
+const randomRankHistory = (currentRank: number): RankHistoryJSON => {
+  // make a random rank array of size 31 ranging 1 - 18, with a 50% chance to remain the previous index's rank, end with current rank
+  let prevRank = Math.floor(Math.random() * 18) + 1;
+  const history: number[] = Array.from({ length: 31 }, (_, i) => {
+    if (i === 30) return currentRank;
+    let chance = i === 0 ? 0 : Math.random();
+    prevRank = chance <= 0.5 ? prevRank : Math.floor(Math.random() * 18) + 1;
+    return prevRank;
+  });
+
+  return {
+    rank: history,
+  };
+};
+
 const containerVariants: Variants = {
   initial: {
     opacity: 0,
@@ -565,25 +634,30 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (
     `/api/fakeUsers?u=${context.query.username}`,
     process.env.NEXT_PUBLIC_URL
   );
+  // TODO: add error handling
   const res = await fetch(url);
   let user = await res.json();
-  // return error in user.data if user not found
   if (user.error) {
-    user = { data: user };
+    return {
+      props: {
+        userData: user,
+        serverError: user,
+      },
+    };
   }
-  return { props: { userData: user.data } };
+  return { props: { userData: user.data[0], serverError: null } };
 };
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
-  const { userData } = page.props;
+  const { userData, serverError } = page.props;
   const metaTags = {
-    title: !userData.error
+    title: !serverError
       ? `${userData.name ?? "User 404"} - toffee`
       : "User 404 - toffee",
-    description: !userData.error
+    description: !serverError
       ? `${userData.name}'s portfolio on toffee`
       : "Couldn't find that user on toffee... :(",
-    imageUrl: !userData.error ? userData.avatar_url : undefined,
+    imageUrl: !serverError ? userData.avatar_url : undefined,
     misc: {
       "twitter:card": "summary",
     },

@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createRedisInstance } from "../../misc/redis";
-import { getUserByName } from "../../misc/TwitchAPI";
+import UserBadge from "../../interfaces/UserBadge";
+import UserFakeDataEntry from "../../interfaces/UserFakeDataEntry";
+import UserJSONEntry from "../../interfaces/UserJSONEntry";
+import { createRedisInstance } from "../../lib/redis";
+import { getUserByName } from "../../lib/TwitchAPI";
 import { fakePrices } from "./fakePrices";
 
 type Data = {
@@ -22,12 +25,24 @@ export default async function handler(
     });
     return;
   }
-
-  let data = fakeData;
-  // calculate all net worths
-  data = data.map((user) => {
+  let userJSON: UserJSONEntry[];
+  let userList: UserFakeDataEntry[] = fakeData;
+  userJSON = userList.map((user) => {
     return {
       ...user,
+      // calculate total assets held (shares)
+      shares: user.assets.reduce((a, b) => a + b.count, 0),
+      // sort users badges by priority
+      badges: (user.badges ?? []).sort((a, b) => b.priority - a.priority ?? 0),
+      avatar_url: "/img/logo.webp",
+      rank: 0,
+      // sort users assets by total value
+      assets: user.assets.sort(
+        (a, b) =>
+          (fakePrices[b.name] ?? 0) * b.count -
+          (fakePrices[a.name] ?? 0) * a.count
+      ),
+      // calculate net worth
       net_worth:
         user.points +
         user.assets.reduce(
@@ -37,29 +52,19 @@ export default async function handler(
     };
   });
   // calculate ranking based on net worth
-  data = data.sort((a, b) => (b.net_worth ?? 0) - (a.net_worth ?? 0));
-  data = data.map((user, i) => {
+  userJSON = userJSON.sort((a, b) => (b.net_worth ?? 0) - (a.net_worth ?? 0));
+  userJSON = userJSON.map((u, i) => {
     return {
-      ...user,
+      ...u,
       rank: i + 1,
-      // calculate total assets held (shares)
-      shares: user.assets.reduce((a, b) => a + b.count, 0),
-      // sort users badges by priority
-      badges: (user.badges ?? []).sort((a, b) => b.priority - a.priority ?? 0),
-      // sort users assets by total value
-      assets: user.assets.sort(
-        (a, b) =>
-          (fakePrices[b.name] ?? 0) * b.count -
-          (fakePrices[a.name] ?? 0) * a.count
-      ),
     };
   });
 
   // if username is specified, only return that user
   if (username) {
     // if user does not exist, return error
-    data = data.filter((u) => u.name === username);
-    if (data.length === 0) {
+    userJSON = userJSON.filter((u) => u.name === username);
+    if (userJSON.length === 0) {
       res
         .status(404)
         .json({ error: { message: "User not found", code: 20000 } });
@@ -82,90 +87,60 @@ export default async function handler(
       twitchData.data[0].profile_image_url = "/img/logo.webp";
     }
     // add users profile picture url
-    data = data.map((u) => {
+    userJSON = userJSON.map((u) => {
       return {
         ...u,
         avatar_url: twitchData.data[0].profile_image_url ?? "",
       };
     });
-    res.status(200).json({ data: data[0] });
-    return;
   }
   if (sortBy) {
     if (sortBy === "daily_change") {
-      data = data.sort((a, b) => b.daily_change - a.daily_change);
+      userJSON = userJSON.sort((a, b) => b.daily_change - a.daily_change);
     } else if (sortBy === "daily_change_percent") {
-      data = data.sort(
+      userJSON = userJSON.sort(
         (a, b) => b.daily_change_percent - a.daily_change_percent
       );
     } else if (sortBy === "shares") {
-      data = data.sort((a, b) => (b.shares ?? 0) - (a.shares ?? 0));
+      userJSON = userJSON.sort((a, b) => (b.shares ?? 0) - (a.shares ?? 0));
     } else if (sortBy === "points") {
-      data = data.sort((a, b) => b.points - a.points);
+      userJSON = userJSON.sort((a, b) => b.points - a.points);
     } else if (sortBy === "name") {
-      data = data.sort((a, b) => a.name.localeCompare(b.name));
+      userJSON = userJSON.sort((a, b) => a.name.localeCompare(b.name));
     }
     if (sortAsc === "true") {
       // slow but only needed for temporary fake data anyway
-      data = data.reverse();
+      userJSON = userJSON.reverse();
     }
   }
-  // fake loading time
-  await new Promise((resolve) =>
-    setTimeout(resolve, 250 + Math.random() * 1000)
-  );
-  res.status(200).json({ data: data });
+  res.status(200).json({ data: userJSON });
 }
 
-interface asset {
-  name: string;
-  count: number;
-  provider: "7tv" | "bttv" | "ffz" | "twitch";
-}
-interface fakeDataEntry {
-  id: number;
-  name: string;
-  points: number;
-  daily_change: number;
-  daily_change_percent: number;
-  assets: asset[];
-  net_worth?: number;
-  shares?: number;
-  avatar_url?: string;
-  badges?: badge[];
-}
-
-interface badge {
-  name: string;
-  color: string;
-  priority: number;
-}
-
-const adminBadge: badge = {
+const adminBadge: UserBadge = {
   name: "Admin",
   color: "#CC3333",
   priority: 99999,
 };
 
-const CEOBadge: badge = {
+const CEOBadge: UserBadge = {
   name: "CEO",
   color: "#F97316",
   priority: 100000,
 };
 
-const webDevBadge: badge = {
+const webDevBadge: UserBadge = {
   name: "Web Dev",
   color: "#a855f7",
   priority: 50000,
 };
 
-const botDevBadge: badge = {
+const botDevBadge: UserBadge = {
   name: "Bot Dev",
   color: "#48b2f1",
   priority: 50001,
 };
 
-const fakeData: fakeDataEntry[] = [
+const fakeData: UserFakeDataEntry[] = [
   {
     id: 4,
     name: "3zachm",
@@ -384,6 +359,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
     ],
+    badges: [],
   },
   {
     id: 6,
@@ -423,6 +399,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 7,
@@ -462,6 +439,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "ffz",
       },
     ],
+    badges: [],
   },
   {
     id: 8,
@@ -496,6 +474,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 9,
@@ -535,6 +514,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 10,
@@ -574,6 +554,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 11,
@@ -613,6 +594,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 12,
@@ -657,6 +639,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 13,
@@ -686,6 +669,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "7tv",
       },
     ],
+    badges: [],
   },
   {
     id: 14,
@@ -720,6 +704,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 15,
@@ -754,6 +739,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 16,
@@ -788,6 +774,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 17,
@@ -822,6 +809,7 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
   {
     id: 18,
@@ -856,7 +844,6 @@ const fakeData: fakeDataEntry[] = [
         provider: "twitch",
       },
     ],
+    badges: [],
   },
 ];
-
-export type { fakeDataEntry };

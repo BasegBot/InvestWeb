@@ -2,6 +2,7 @@ import { m, Variants } from "framer-motion";
 import Link from "next/link";
 import { ReactElement, useEffect, useState } from "react";
 import Loading from "../../components/common/Loading";
+import UserJSONEntry from "../../interfaces/UserJSONEntry";
 import DashLayout from "../../layouts/DashLayout";
 
 function Ranking() {
@@ -158,47 +159,44 @@ function Ranking() {
                 >
                   {
                     // generate table rows
-                    fakeData.map(
-                      (entry: { [key: string]: any }, index: number) => {
-                        // if daily change is negative, make it red
-                        let changeClass = " text-lime-500";
-                        if (entry.daily_change_percent < 0) {
-                          changeClass = " text-red-500";
-                        }
-                        return (
-                          <m.div
-                            className="inline-grid w-full grid-flow-col grid-cols-[1fr_4fr_3fr_2fr] gap-2 border-b-2 border-zinc-700 px-5 py-2 text-right md:grid-cols-[0.5fr_4fr_repeat(3,_2fr)_1.5fr]"
-                            key={entry.id}
-                            variants={rankingDataLineVariants}
-                          >
-                            <h1 className="text-left md:text-center">
-                              {index + 1}
-                            </h1>
-                            <Link
-                              href={`/user/${entry.name}`}
-                              className="overflow-hidden"
-                            >
-                              <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
-                                {entry.name}
-                              </h1>
-                            </Link>
-                            <h1>{entry.net_worth.toLocaleString("en-US")}</h1>
-                            <h1 className="hidden md:block">
-                              {entry.points.toLocaleString("en-US")}
-                            </h1>
-                            <h1 className="hidden md:block">
-                              {entry.shares.toLocaleString("en-US")}
-                            </h1>
-                            <h1 className={changeClass}>
-                              {(
-                                Math.round(entry.daily_change_percent * 1000) /
-                                10
-                              ).toFixed(1) + "%"}
-                            </h1>
-                          </m.div>
-                        );
+                    fakeData.map((entry: UserJSONEntry, index: number) => {
+                      // if daily change is negative, make it red
+                      let changeClass = " text-lime-500";
+                      if (entry.daily_change_percent < 0) {
+                        changeClass = " text-red-500";
                       }
-                    )
+                      return (
+                        <m.div
+                          className="inline-grid w-full grid-flow-col grid-cols-[1fr_4fr_3fr_2fr] gap-2 border-b-2 border-zinc-700 px-5 py-2 text-right md:grid-cols-[0.5fr_4fr_repeat(3,_2fr)_1.5fr]"
+                          key={entry.id}
+                          variants={rankingDataLineVariants}
+                        >
+                          <h1 className="text-left md:text-center">
+                            {index + 1}
+                          </h1>
+                          <Link
+                            href={`/user/${entry.name}`}
+                            className="overflow-hidden"
+                          >
+                            <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+                              {entry.name}
+                            </h1>
+                          </Link>
+                          <h1>{entry.net_worth.toLocaleString("en-US")}</h1>
+                          <h1 className="hidden md:block">
+                            {entry.points.toLocaleString("en-US")}
+                          </h1>
+                          <h1 className="hidden md:block">
+                            {entry.shares.toLocaleString("en-US")}
+                          </h1>
+                          <h1 className={changeClass}>
+                            {(
+                              Math.round(entry.daily_change_percent * 1000) / 10
+                            ).toFixed(1) + "%"}
+                          </h1>
+                        </m.div>
+                      );
+                    })
                   }
                 </m.div>
               )

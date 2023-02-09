@@ -11,6 +11,11 @@ const nextConfig = {
       "cdn.frankerfacez.com",
     ],
   },
+  i18n: {
+    // append/clean as needed
+    locales: ["en", "de", "fr", "es", "it", "pt", "ru", "zh", "ja", "ko"],
+    defaultLocale: "en",
+  },
 };
 
 module.exports = nextConfig;

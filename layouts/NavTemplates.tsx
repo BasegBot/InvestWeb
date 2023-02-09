@@ -52,6 +52,7 @@ const homeMain: NavTemplate[] = [
   // { content: <DefaultNavOption label="About" href="/about" /> },
   { content: <DefaultNavOption label="Dashboard" href="/dashboard" /> },
   { content: <DefaultNavOption label="Team" href="/team" /> },
+  { content: <DefaultNavOption label="Wiki" href="/wiki" /> },
   // { content: <DefaultNavOption label="Contact" href="/contact" /> },
 ];
 
