@@ -77,14 +77,14 @@ function UserPage(props: UserPageProps) {
         // ffz
         data["ffz"].channel.forEach((emote: any) => {
           // ffz emotes don't have all sizes available, so we need to get the largest one by taking the largest key in the urls object
-          emotes["ffz"][emote.name] = `https:${
+          emotes["ffz"][emote.name] = `${
             emote.urls[
               Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
             ]
           }`;
         });
         data["ffz"].global.forEach((emote: any) => {
-          emotes["ffz"][emote.name] = `https:${
+          emotes["ffz"][emote.name] = `${
             emote.urls[
               Math.max(...Object.keys(emote.urls).map((k) => parseInt(k)))
             ]
