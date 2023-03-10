@@ -54,8 +54,10 @@ export default async function handler(
         channel: (await getBTTVUser(redis, "56418014")).channelEmotes,
       },
       ffz: {
-        global: ffzGlobal.sets["3"].emoticons.concat(
-          ffzGlobal.sets["4330"].emoticons
+        // concat all emoticons in the ffzGlobal.sets json keys
+        global: Object.values(ffzGlobal.sets).reduce(
+          (acc: any, cur: any) => acc.concat(cur.emoticons),
+          []
         ),
         channel: (await getFFZEmoteSet(redis, "341402")).set.emoticons,
       },
