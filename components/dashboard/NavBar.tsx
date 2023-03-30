@@ -2,6 +2,7 @@ import { m, Variants } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const ActiveLink = (props: {
   href: string;
@@ -22,6 +23,7 @@ const ActiveLink = (props: {
 };
 
 function NavBar() {
+  const { data: session } = useSession();
   return (
     <div className="m-3">
       <m.div
@@ -57,6 +59,32 @@ function NavBar() {
               <WikiIcon />
             </ActiveLink>
           </m.div>
+          {session ? (
+            <m.div
+              className="pr-5 lg:pr-0 lg:pt-3 lg:pb-3"
+              whileHover={{
+                color: "#fca311",
+              }}
+              whileTap={{
+                color: "#dd4444",
+              }}
+              variants={navIconVariants}
+              onClick={() => signOut()}
+            >
+              <p className="cursor-pointer">Log out</p>
+            </m.div>
+          ) : (
+            <m.div
+              className="pr-5 lg:pr-0 lg:pt-3 lg:pb-3"
+              whileHover={{
+                color: "#fca311",
+              }}
+              variants={navIconVariants}
+              onClick={() => signIn()}
+            >
+              <LogInIcon />
+            </m.div>
+          )}
           <m.div
             className="fill-white stroke-white lg:pt-3"
             whileHover={{
@@ -142,6 +170,19 @@ const WikiIcon = () => {
     <NavSvgWrap>
       <m.path
         d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"
+        strokeWidth="1"
+        stroke="currentColor"
+        fill="currentColor"
+      />
+    </NavSvgWrap>
+  );
+};
+
+const LogInIcon = () => {
+  return (
+    <NavSvgWrap>
+      <m.path
+        d="M11 7 9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"
         strokeWidth="1"
         stroke="currentColor"
         fill="currentColor"

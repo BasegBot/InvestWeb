@@ -3,6 +3,7 @@ import { useState, Fragment } from "react";
 import { NavTemplate } from "../../layouts/NavTemplates";
 import Image from "next/image";
 import { AnimatePresence, m, Variants } from "framer-motion";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 interface NavProps {
   options: NavTemplate[];
@@ -11,6 +12,10 @@ interface NavProps {
 function NavBar({ options }: NavProps) {
   const [navList, setNavList] = useState(options);
   const [isActive, setActive] = useState(false);
+  const [isUserActive, setUserActive] = useState(false);
+  const { data: session } = useSession();
+  const avatar = session?.user?.image ?? "/img/defaultAvatar.webp";
+
   return (
     <m.div
       className="pointer-events-none fixed z-50 inline-grid w-screen grid-cols-2 bg-zinc-900 bg-opacity-90 font-plusJakarta text-2xl lg:grid-cols-3"
@@ -88,11 +93,70 @@ function NavBar({ options }: NavProps) {
         ))}
       </m.div>
       <m.div
-        className="ml-auto flex flex-row items-center justify-center p-2 sm:p-7"
+        className="ml-auto flex flex-row items-center justify-center"
         variants={itemVariants}
       >
-        <p className="pointer-events-auto select-none pr-5 text-white">WIP</p>
-        <div className="h-10 w-10 rounded-full bg-white"></div>
+        {session ? (
+          <>
+            <div
+              onMouseOver={() => setUserActive(true)}
+              onMouseLeave={() => setUserActive(false)}
+              className="pointer-events-auto relative"
+            >
+              <div className="pointer-events-auto relative mt-4 flex w-60 flex-row items-center justify-center border-l-2 border-orange-500 bg-zinc-800 p-6">
+                <Image
+                  src={avatar}
+                  alt="avatar"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <span className="text-md mr-5 ml-6 text-gray-400">
+                  {session?.user?.name ?? "User"}
+                </span>
+              </div>
+              <AnimatePresence mode="wait">
+                <m.div
+                  className="pointer-events-auto absolute top-28 z-50 w-60 border-l-2 border-orange-500 bg-zinc-800 pb-3"
+                  animate={{
+                    opacity: isUserActive ? 1 : 0,
+                    x: isUserActive ? 0 : 10,
+                    transition: {
+                      duration: 0.2,
+                      ease: "easeInOut",
+                    },
+                  }}
+                >
+                  <div className="flex flex-col items-center justify-center">
+                    <Link
+                      href={`/user/${session?.user?.name ?? "User"}`}
+                      className="flex h-14 w-full flex-row items-center justify-center text-orange-500 hover:bg-zinc-900 hover:text-white"
+                    >
+                      <span className="text-md text-gray-400">Profile</span>
+                    </Link>
+                    <div className="flex h-14 items-center justify-center">
+                      <button
+                        onClick={() => signOut()}
+                        className="rounded-md bg-zinc-700 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                </m.div>
+              </AnimatePresence>
+            </div>
+          </>
+        ) : (
+          <div className="pointer-events-auto flex flex-row items-center justify-center px-6">
+            <button
+              onClick={() => signIn()}
+              className="rounded-md bg-zinc-700 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+            >
+              Login
+            </button>
+          </div>
+        )}
       </m.div>
       <AnimatePresence mode="wait">
         {isActive && (
@@ -101,9 +165,6 @@ function NavBar({ options }: NavProps) {
             className="pointer-events-auto z-10 flex w-screen flex-col items-center overflow-hidden bg-zinc-800 bg-opacity-70 pt-5 lg:hidden"
             // have it take up the entire screen, animate in by expanding from the bottom of the nav bar to the bottom of the screen
             variants={mobileContainerVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
           >
             {navList.map((nav, index) => (
               <m.div
