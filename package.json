@@ -11,6 +11,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@next-auth/mongodb-adapter": "^1.1.1",
     "@types/fs-extra": "^11.0.1",
     "chart.js": "^4.2.0",
     "eslint": "8.28.0",
@@ -20,7 +21,9 @@
     "fs-extra": "^11.1.0",
     "gray-matter": "^4.0.3",
     "ioredis": "^5.2.5",
+    "mongodb": "^5.1.0",
     "next": "13.0.4",
+    "next-auth": "^4.20.1",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
