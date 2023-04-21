@@ -21,16 +21,13 @@ function Home() {
           let base_url = emote.data.host.url;
           // get the largest emote size, append it to the base url
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
-          // if width != height, skip it
-          if (largest.width !== largest.height) {
-            return null;
+          // could be null
+          if (!largest || largest.width !== largest.height) {
+            return false;
           }
+
           return `https:${base_url}/${largest.name}`;
         });
-
-        // remove null values
-
-        emoteUrls = emoteUrls.filter((emote: any) => emote !== null);
 
         setEmotes(emoteUrls);
         setCurrentEmote(Math.floor(Math.random() * emoteUrls.length));
