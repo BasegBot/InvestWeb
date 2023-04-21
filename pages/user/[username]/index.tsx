@@ -55,6 +55,10 @@ function UserPage(props: UserPageProps) {
           let base_url = emote.data.host.url;
           // get the largest emote size, append it to the base url
           let largest = emote.data.host.files[emote.data.host.files.length - 1];
+          // if null return
+          if (!largest) {
+            return false;
+          }
           emotes["7tv"][emote.data.name] = `https:${base_url}/${largest.name}`;
         });
         // same for global emotes
